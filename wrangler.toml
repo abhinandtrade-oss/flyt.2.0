@@ -1,4 +1,5 @@
 name = "flyt-2-0"
+account_id = "d5d08cd2db9b4efb422e7b8790d32ab0"
 compatibility_date = "2025-12-01"
 main = "src/index.js"
 
