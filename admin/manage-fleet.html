@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Fleet - FLTT Admin</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+            /* Hidden for auth check */
+        }
+
+        .fleet-thumb-preview {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #eee;
+        }
+
+        .category-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .badge-taxi {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-bus {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        async function initAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                window.supabaseClient = supabase;
+                document.body.style.display = 'block';
+            }
+        }
+        initAuth();
+    </script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+
+                <h1 class="page-title">Manage Taxi & Bus Fleet</h1>
+                <div class="content-card" id="card-fleet">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                        <div class="card-heading m-0 b-0 border-0">
+                            <i class="fas fa-bus"></i> Fleet Registry
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button onclick="toggleView('bookings')" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-list-alt me-1"></i> View Bookings
+                            </button>
+                            <!--button onclick="importDefaults()" class="btn btn-outline-custom btn-sm">
+                                <i class="fas fa-file-import me-1"></i> Import Existing Data
+                            </button-->
+                            <button onclick="openFleetModal()" class="btn btn-custom btn-sm">
+                                <i class="fas fa-plus me-1"></i> Add Vehicle
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 100px;">Thumb</th>
+                                    <th>Vehicle Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th style="width: 150px; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fleetTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- All Bookings Section -->
+                <div class="content-card mt-4" id="card-bookings" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                        <div class="card-heading m-0 b-0 border-0">
+                            <i class="fas fa-list-alt"></i> All Taxi & Bus Bookings
+                        </div>
+                        <button onclick="toggleView('fleet')" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Fleet
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <input type="text" id="bookingSearch" class="form-control"
+                                placeholder="Search by Customer Name or Vehicle Number..." oninput="filterBookings()">
+                        </div>
+                        <div class="col-md-4">
+                            <select id="bookingStatusFilter" class="form-select" onchange="filterBookings()">
+                                <option value="all">All Statuses</option>
+                                <option value="new">New Requests</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="loadBookings()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Customer Info</th>
+                                    <th>Route</th>
+                                    <th>Vehicle Assigned</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <div class="mt-2 text-muted">Loading bookings...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Fleet Modal -->
+    <div class="modal fade" id="fleetModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="fleetModalTitle">Add Vehicle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="fleetId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-600">Vehicle Name</label>
+                            <input type="text" class="form-control" id="fleetName" placeholder="e.g. Premium Sedan">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-600">Category</label>
+                            <select class="form-select" id="fleetCategory">
+                                <option value="taxi">Taxi / Car</option>
+                                <option value="bus">Tourist Bus</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-600">Price (e.g. ₹15/km)</label>
+                            <input type="text" class="form-control" id="fleetPrice" placeholder="₹15/km">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Description</label>
+                        <textarea class="form-control" id="fleetDesc" rows="2"
+                            placeholder="Briefly describe the vehicle features..."></textarea>
+                    </div>
+                    <div class="mb-3 form-check form-switch ms-1">
+                        <input class="form-check-input" type="checkbox" id="fleetEnabled" checked>
+                        <label class="form-check-label fw-600" for="fleetEnabled">Enable / Show in Portal</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-600">Thumbnail (Key or URL)</label>
+                            <input type="text" class="form-control" id="fleetThumbKey"
+                                placeholder="IM-160 or https://...">
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label fw-600">Photos (Keys or URLs, Comma Separated)</label>
+                            <input type="text" class="form-control" id="fleetPhotoKeys"
+                                placeholder="IM-161, https://..., IM-162">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Videos (Keys or YouTube URLs, Comma Separated)</label>
+                        <input type="text" class="form-control" id="fleetVideoKeys"
+                            placeholder="IM-186, https://youtube.com/watch?v=...">
+                    </div>
+                    <div id="fleetModalStatus" class="status-msg"></div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="saveFleetItem()" class="btn btn-custom px-4">Save Vehicle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="bookingDetailsBody">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { saveContent, fetchContent, fetchAllContent, supabase } from '../assets/js/supabase-client.js';
+
+        const FLEET_KEY = 'admin_fleet_config_json';
+        const fleetModal = new bootstrap.Modal(document.getElementById('fleetModal'));
+        let fleetItems = [];
+        let siteImages = {};
+
+        async function loadFleetData() {
+            const [fleetData, imagesData] = await Promise.all([
+                fetchContent(FLEET_KEY),
+                fetchAllContent()
+            ]);
+            siteImages = imagesData;
+            try { fleetItems = fleetData ? JSON.parse(fleetData) : []; } catch (e) { fleetItems = []; }
+
+            // If empty, suggest common defaults but don't auto-save
+            if (fleetItems.length === 0) {
+                // Initial empty state
+            }
+        }
+
+        const defaultData = [
+            { id: 'taxi_1', name: 'Premium Sedan', category: 'taxi', price: '₹15/km', enabled: true, desc: 'Comfortable sedan for small families and business trips. AC, Music System, Boot Space.', thumbKey: 'IM-160', photoKeys: ['IM-161', 'IM-162', 'IM-163', 'IM-164', 'IM-165'], videoKeys: [] },
+            { id: 'taxi_2', name: 'Luxury SUV', category: 'taxi', price: '₹22/km', enabled: true, desc: 'Spacious SUV for long journeys and extra luggage. Premium comfort.', thumbKey: 'IM-170', photoKeys: ['IM-171', 'IM-172', 'IM-173', 'IM-174', 'IM-175'], videoKeys: [] },
+            { id: 'taxi_3', name: 'Family MPV (Innova)', category: 'taxi', price: '₹20/km', enabled: true, desc: 'Perfect for family vacations. 7 Seater with ample space and AC.', thumbKey: 'IM-190', photoKeys: ['IM-191', 'IM-192', 'IM-193', 'IM-194', 'IM-195'], videoKeys: [] },
+            { id: 'bus_1', name: 'Kerala Tourist Bus', category: 'bus', price: 'Contact Us', enabled: true, desc: 'Fully equipped tourist bus with LED TV, DJ System, Air Suspension and Charging Points.', thumbKey: 'IM-180', photoKeys: ['IM-181', 'IM-182', 'IM-183', 'IM-184', 'IM-185'], videoKeys: ['IM-186', 'IM-187', 'IM-188'] },
+            { id: 'bus_2', name: 'Urban Traveller', category: 'bus', price: 'Contact Us', enabled: true, desc: 'Compact bus for group outings. Comfortable push-back seats and sound system.', thumbKey: 'IM-200', photoKeys: ['IM-201', 'IM-202', 'IM-203', 'IM-204', 'IM-205'], videoKeys: ['IM-206', 'IM-207', 'IM-208'] }
+        ];
+
+        window.importDefaults = async () => {
+            const confirmed = await window.showConfirm('Import Defaults', 'This will add the 5 default vehicles to your fleet. Existing items will remain. Continue?');
+            if (!confirmed) return;
+
+            // Merge defaults into existing fleetItems (avoid duplicates by ID)
+            const currentIds = fleetItems.map(i => i.id);
+            const toAdd = defaultData.filter(d => !currentIds.includes(d.id));
+
+            if (toAdd.length === 0) {
+                window.showAlert('Default items already exist in your fleet.', 'info');
+                return;
+            }
+
+            fleetItems = [...fleetItems, ...toAdd];
+            const res = await saveContent(FLEET_KEY, JSON.stringify(fleetItems));
+            if (!res.error) {
+                renderFleetTable();
+                window.showAlert(`${toAdd.length} vehicles imported successfully!`, 'success');
+            } else {
+                window.showAlert('Import failed: ' + res.error.message, 'error');
+            }
+        };
+
+        const showStatus = (el, type, msg) => {
+            el.textContent = msg;
+            el.className = `status-msg active ${type}`;
+            if (type === 'success') setTimeout(() => el.className = 'status-msg', 3000);
+        };
+
+        window.openFleetModal = (id = null) => {
+            const item = id ? fleetItems.find(i => i.id === id) : null;
+            document.getElementById('fleetId').value = id || '';
+            document.getElementById('fleetName').value = item ? item.name : '';
+            document.getElementById('fleetCategory').value = item ? item.category : 'taxi';
+            document.getElementById('fleetPrice').value = item ? (item.price || '') : '';
+            document.getElementById('fleetEnabled').checked = item ? (item.enabled !== false) : true;
+            document.getElementById('fleetDesc').value = item ? item.desc : '';
+            document.getElementById('fleetThumbKey').value = item ? item.thumbKey : '';
+            document.getElementById('fleetPhotoKeys').value = item ? (Array.isArray(item.photoKeys) ? item.photoKeys.join(', ') : item.photoKeys) : '';
+            document.getElementById('fleetVideoKeys').value = item ? (Array.isArray(item.videoKeys) ? item.videoKeys.join(', ') : item.videoKeys) : '';
+            document.getElementById('fleetModalTitle').innerText = id ? 'Edit Vehicle' : 'Add Vehicle';
+            fleetModal.show();
+        };
+
+        window.saveFleetItem = async () => {
+            const id = document.getElementById('fleetId').value || 'fleet_' + Date.now();
+            const name = document.getElementById('fleetName').value;
+            const category = document.getElementById('fleetCategory').value;
+            const price = document.getElementById('fleetPrice').value;
+            const enabled = document.getElementById('fleetEnabled').checked;
+            const desc = document.getElementById('fleetDesc').value;
+            const thumbKey = document.getElementById('fleetThumbKey').value.trim();
+            const photoKeysRaw = document.getElementById('fleetPhotoKeys').value;
+            const videoKeysRaw = document.getElementById('fleetVideoKeys').value;
+
+            if (!name || !thumbKey) {
+                window.showAlert('Vehicle name and Thumbnail (Key/URL) are required', 'warning');
+                return;
+            }
+
+            const photoKeys = photoKeysRaw.split(',').map(k => k.trim()).filter(k => k !== '');
+            const videoKeys = videoKeysRaw.split(',').map(k => k.trim()).filter(k => k !== '');
+
+            const isEdit = !!document.getElementById('fleetId').value;
+            const confirmed = await window.showConfirm(isEdit ? 'Update Vehicle' : 'Save Vehicle', `Are you sure you want to ${isEdit ? 'update' : 'add'} "${name}"?`);
+            if (!confirmed) return;
+
+            const newItem = { id, name, category, price, enabled, desc, thumbKey, photoKeys, videoKeys };
+            const existingIndex = fleetItems.findIndex(i => i.id === id);
+            if (existingIndex > -1) fleetItems[existingIndex] = newItem;
+            else fleetItems.push(newItem);
+
+            const statusEl = document.getElementById('fleetModalStatus');
+            showStatus(statusEl, 'loading', 'Saving fleet...');
+
+            const res = await saveContent(FLEET_KEY, JSON.stringify(fleetItems));
+            if (!res.error) {
+                showStatus(statusEl, 'success', 'Fleet updated!');
+                setTimeout(() => { fleetModal.hide(); renderFleetTable(); }, 1000);
+            } else {
+                showStatus(statusEl, 'error', res.error.message);
+            }
+        };
+
+        window.deleteFleetItem = async (id) => {
+            const confirmed = await window.showConfirm('Remove Vehicle', 'Are you sure you want to remove this vehicle from the fleet?');
+            if (confirmed) {
+                fleetItems = fleetItems.filter(i => i.id !== id);
+                const res = await saveContent(FLEET_KEY, JSON.stringify(fleetItems));
+                if (!res.error) {
+                    renderFleetTable();
+                    window.showAlert('Vehicle removed successfully', 'success');
+                } else {
+                    window.showAlert('Failed to remove: ' + res.error.message, 'error');
+                }
+            }
+        };
+
+        window.renderFleetTable = async () => {
+            await loadFleetData();
+            const tbody = document.getElementById('fleetTableBody');
+            tbody.innerHTML = fleetItems.map(i => {
+                const thumbUrl = i.thumbKey.startsWith('http') ? i.thumbKey : (siteImages[i.thumbKey] || '');
+                return `
+                <tr>
+                    <td>
+                        <img src="${thumbUrl}" class="fleet-thumb-preview" onerror="this.src='../assets/images/resources/logo-1.png'">
+                    </td>
+                    <td>
+                        <div class="fw-600">${i.name}</div>
+                        <span class="category-badge badge-${i.category}">${i.category}</span>
+                    </td>
+                    <td><div class="fw-600 text-primary">${i.price || '<small class="text-muted">N/A</small>'}</div></td>
+                    <td>
+                        ${i.enabled !== false ?
+                        '<span class="badge bg-success" style="font-size:10px;">ENABLED</span>' :
+                        '<span class="badge bg-danger" style="font-size:10px;">DISABLED</span>'}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-info me-2" onclick="openFleetModal('${i.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteFleetItem('${i.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `}).join('') || '<tr><td colspan="5" class="text-center py-4 text-muted">No vehicles added to fleet yet. Click "Add Vehicle" to begin.</td></tr>';
+        };
+
+        window.toggleView = (view) => {
+            if (view === 'fleet') {
+                document.getElementById('card-fleet').style.display = 'block';
+                document.getElementById('card-bookings').style.display = 'none';
+            } else {
+                document.getElementById('card-fleet').style.display = 'none';
+                document.getElementById('card-bookings').style.display = 'block';
+                loadBookings(); // Refresh when opening
+            }
+        };
+
+        // --- Booking Management Logic ---
+        let allBookings = [];
+        let partnerVehicles = [];
+        let platformSettings = { percent: 0 };
+
+        window.loadBookings = async () => {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>';
+
+            // Fetch Bookings, Vehicles, and Settings in parallel
+            const [enqRes, vehiclesRes, feeRes] = await Promise.all([
+                supabase.from('enquiries').select('*').eq('type', 'fleet').order('created_at', { ascending: false }),
+                supabase.from('taxi_vehicles').select('*'),
+                fetchContent('taxi_platform_fee')
+            ]);
+
+            // Handle Bookings
+            if (enqRes.data) {
+                allBookings = enqRes.data;
+                filterBookings();
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-danger">Error loading bookings: ${enqRes.error?.message}</td></tr>`;
+            }
+
+            // Handle Vehicles
+            if (vehiclesRes.data) {
+                partnerVehicles = vehiclesRes.data;
+            }
+
+            // Handle Settings
+            if (feeRes) {
+                try {
+                    const parsed = JSON.parse(feeRes);
+                    platformSettings = parsed || { percent: 0 };
+                } catch (e) { console.error("Error parsing fees", e); }
+            }
+        };
+
+        window.filterBookings = () => {
+            const search = document.getElementById('bookingSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('bookingStatusFilter').value;
+
+            const filtered = allBookings.filter(b => {
+                const matchesSearch = (b.name && b.name.toLowerCase().includes(search)) ||
+                    (b.details?.vehicle_id && b.details.vehicle_id.toLowerCase().includes(search));
+                const matchesStatus = statusFilter === 'all' || b.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            renderBookings(filtered);
+        };
+
+        function renderBookings(bookings) {
+            const tbody = document.getElementById('bookingsTableBody');
+            if (bookings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No bookings found matching your criteria.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = bookings.map(b => {
+                const d = b.details || {};
+                const statusColors = {
+                    'new': 'bg-warning text-dark',
+                    'accepted': 'bg-success text-white',
+                    'rejected': 'bg-danger text-white',
+                    'completed': 'bg-info text-dark'
+                };
+                const statusBadge = `<span class="badge ${statusColors[b.status] || 'bg-secondary'} text-uppercase">${b.status}</span>`;
+
+                return `
+                <tr>
+                    <td>
+                        <div class="fw-bold">${new Date(b.created_at).toLocaleDateString()}</div>
+                        <div class="small text-muted">${new Date(b.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${b.name}</div>
+                        <div class="small"><i class="fas fa-phone me-1"></i>${b.phone || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <div class="small"><strong>From:</strong> ${d.from || 'N/A'}</div>
+                        <div class="small"><strong>To:</strong> ${d.to || 'N/A'}</div>
+                    </td>
+                    <td>
+                        ${d.vehicle_id ?
+                        `<span onclick="viewBookingDetails('${b.id}')" class="badge bg-light text-dark border user-select-none" style="cursor: pointer;" title="Click to view details"><i class="fas fa-car me-1"></i>${d.vehicle_id}</span>`
+                        : '<span class="text-muted small">Not Assigned</span>'}
+                    </td>
+                    <td>${statusBadge}</td>
+                    <td class="text-center">
+                         <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="updateBookingStatus('${b.id}', 'accepted')"><i class="fas fa-check text-success me-2"></i>Mark Accepted</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="updateBookingStatus('${b.id}', 'rejected')"><i class="fas fa-times text-danger me-2"></i>Mark Rejected</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        window.viewBookingDetails = (id) => {
+            const booking = allBookings.find(b => b.id == id);
+            if (!booking) return;
+
+            const d = booking.details || {};
+            const vehicleId = d.vehicle_id;
+            let partnerHtml = '';
+            let statsHtml = '';
+
+            if (vehicleId) {
+                // Partner Logic
+                const vehicleData = partnerVehicles.find(v => v.vehicle_num === vehicleId);
+                const partnerName = vehicleData ? vehicleData.name : 'Unknown Partner'; // Assuming 'name' in taxi_vehicles is vehicle name, owner_email is partner. Usually 'name' might be 'Innova'. Let's check previously viewed taxi-portal.
+                // In taxi-portal.html: window.saveVehicleDetails -> name is vehicle name. owner_email is currentUser.email. 
+                // There isn't a direct "Partner Name" stored in taxi_vehicles, only owner_email and owner_id. 
+                // However, the user might want the Owner's info. We have owner_email.
+                const partnerEmail = vehicleData ? vehicleData.owner_email : 'N/A';
+
+                partnerHtml = `
+                    <div class="mb-4 p-3 bg-white border border-primary rounded-3 shadow-sm">
+                        <h6 class="fw-bold text-primary mb-2"><i class="fas fa-id-card me-2"></i>Partner / Owner Details</h6>
+                        <div class="row g-2 small">
+                            <div class="col-md-6"><strong>Vehicle ID:</strong> ${vehicleId}</div>
+                            <div class="col-md-6"><strong>Vehicle Name:</strong> ${vehicleData?.name || 'N/A'}</div>
+                            <div class="col-12"><strong>Owner Email:</strong> <a href="mailto:${partnerEmail}">${partnerEmail}</a></div>
+                        </div>
+                    </div>
+                `;
+
+                // Stats Logic
+                const vehicleBookings = allBookings.filter(b => b.details?.vehicle_id === vehicleId);
+                const acceptedCount = vehicleBookings.filter(b => b.status === 'accepted' || b.status === 'completed').length;
+                const pendingCount = vehicleBookings.filter(b => b.status === 'new').length;
+
+                let totalDist = 0;
+                let totalRev = 0;
+
+                vehicleBookings.forEach(b => {
+                    // Only count stats for valid trips if that's the requirement, "accepted trips" implies successful ones.
+                    // For total metrics, usually based on accepted/completed.
+                    if (b.status === 'accepted' || b.status === 'completed') {
+                        totalDist += parseFloat(b.details?.est_km || 0);
+                        totalRev += parseFloat(b.details?.est_fare || 0);
+                    }
+                });
+
+                const platformFee = Math.round(totalRev * (platformSettings.percent || 0) / 100);
+
+                statsHtml = `
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-chart-pie me-2"></i>Performance (This Vehicle)</h6>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 border rounded text-center bg-light">
+                                    <div class="small text-muted fw-bold">ACCEPTED</div>
+                                    <div class="h5 mb-0 text-success">${acceptedCount}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 border rounded text-center bg-light">
+                                    <div class="small text-muted fw-bold">PENDING</div>
+                                    <div class="h5 mb-0 text-warning">${pendingCount}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 border rounded text-center bg-light">
+                                    <div class="small text-muted fw-bold">DISTANCE</div>
+                                    <div class="h5 mb-0 text-info">${totalDist.toFixed(1)} km</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 border rounded text-center bg-light">
+                                    <div class="small text-muted fw-bold">REVENUE</div>
+                                    <div class="h5 mb-0 text-primary">₹${totalRev.toLocaleString()}</div>
+                                </div>
+                            </div>
+                             <div class="col-12 mt-2">
+                                <div class="p-2 border border-danger border-opacity-25 rounded bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
+                                    <span class="small fw-bold text-danger">Total Platform Fee (${platformSettings.percent}%)</span>
+                                    <span class="fw-bold text-danger">₹${platformFee.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const modalBody = document.getElementById('bookingDetailsBody');
+
+            modalBody.innerHTML = `
+                <!-- Customer Section -->
+                <div class="mb-4 p-3 bg-light rounded-3">
+                    <h6 class="fw-bold text-dark mb-3"><i class="fas fa-user-circle me-2"></i>Customer Information</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Name:</strong> ${booking.name}</div>
+                        <div class="col-md-6"><strong>Phone:</strong> ${booking.phone || 'N/A'}</div>
+                        <div class="col-12"><strong>Email:</strong> ${booking.email || 'N/A'}</div>
+                        ${d.notes ? `<div class="col-12 mt-2"><strong>Notes:</strong> <span class="text-muted fst-italic">${d.notes}</span></div>` : ''}
+                    </div>
+                </div>
+
+                ${partnerHtml}
+                ${statsHtml}
+
+                <!-- Trip Section -->
+                <div class="mb-4">
+                    <h6 class="fw-bold text-info mb-3"><i class="fas fa-route me-2"></i>Trip Details</h6>
+                    <div class="p-3 border rounded bg-white">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt text-danger me-3" style="width: 20px;"></i>
+                            <div><strong>From:</strong> ${d.from || 'N/A'}</div>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-flag-checkered text-success me-3" style="width: 20px;"></i>
+                            <div><strong>To:</strong> ${d.to || 'N/A'}</div>
+                        </div>
+                        <hr>
+                        <div class="row g-2">
+                             <div class="col-6"><strong>Status:</strong> <span class="badge bg-secondary">${booking.status}</span></div>
+                             <div class="col-6"><strong>Est. Distance:</strong> ${d.est_km ? d.est_km + ' km' : '-'}</div>
+                             <div class="col-6"><strong>Est. Fare:</strong> ₹${d.est_fare || '0'}</div>
+                             <div class="col-6 text-muted small text-end">${new Date(booking.created_at).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('bookingDetailsModal')).show();
+        };
+
+        window.updateBookingStatus = async (id, status) => {
+            const confirmed = await window.showConfirm('Update Status', `Mark this booking as ${status}?`);
+            if (!confirmed) return;
+
+            const { error } = await supabase.from('enquiries').update({ status }).eq('id', id);
+            if (!error) {
+                window.showAlert(`Booking marked as ${status}`, 'success');
+                // Update local state to avoid full reload flicker
+                const idx = allBookings.findIndex(b => b.id == id);
+                if (idx > -1) allBookings[idx].status = status;
+                filterBookings();
+            } else {
+                window.showAlert('Error: ' + error.message, 'error');
+            }
+        };
+
+        renderFleetTable();
+        loadBookings(); // Initial Load
+    </script>
+</body>
+
+</html>

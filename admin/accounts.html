@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts & Finance | FLTT Admin</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .filter-bar {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .badge-sale {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            border: 1px solid #bbdefb;
+        }
+
+        .badge-taxi {
+            background-color: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffe0b2;
+        }
+
+        .table-hover tbody tr {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title mb-0">Accounts & Finance</h1>
+                    <div>
+                        <button class="btn btn-success" onclick="exportToCSV()">
+                            <i class="fas fa-file-csv me-2"></i> Export Combined CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div style="flex: 2; min-width: 250px;">
+                        <label class="form-label small fw-bold">Search (Ref, Name, Details)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i
+                                    class="fas fa-search text-muted"></i></span>
+                            <input type="text" id="filter-search" class="form-control border-start-0"
+                                placeholder="Type to search..." oninput="applyFilters()">
+                        </div>
+                    </div>
+                    <div style="width: 150px;">
+                        <label class="form-label small fw-bold">Type</label>
+                        <select id="filter-type" class="form-select" onchange="applyFilters()">
+                            <option value="all">All Types</option>
+                            <option value="Sale">Sales</option>
+                            <option value="Taxi">Taxi/Bus</option>
+                        </select>
+                    </div>
+                    <div style="width: 150px;">
+                        <label class="form-label small fw-bold">Month</label>
+                        <input type="month" id="filter-month" class="form-control" onchange="applyFilters()">
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="content-card">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Ref / ID</th>
+                                    <th>Customer</th>
+                                    <th>Service / Vehicle</th>
+                                    <th style="width: 200px;">Financial Breakdown</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accountsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <div class="mt-2 text-muted">Loading accounts data...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Details Modal -->
+            <div class="modal fade" id="detailsModal" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold" id="detailsModalLabel">Transaction Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4" id="detailsModalBody">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="admin-footer">
+                &copy; 2026 <span>FLY LIGHT TOURS AND TRAVELS</span>. Accounts Dashboard.
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase, fetchContent } from '../assets/js/supabase-client.js';
+
+        let allData = [];
+        let filteredData = [];
+
+        async function init() {
+            // Auth Check
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load Data
+            await loadAllData();
+            document.body.style.display = 'block';
+        }
+
+        async function loadAllData() {
+            try {
+                // 1. Fetch Sales
+                const { data: sales, error: salesError } = await supabase
+                    .from('sales')
+                    .select('*');
+
+                if (salesError) throw salesError;
+
+                // 2. Fetch Taxi Enquiries (Fleet)
+                const { data: taxi, error: taxiError } = await supabase
+                    .from('enquiries')
+                    .select('*')
+                    .eq('type', 'fleet');
+
+                if (taxiError) throw taxiError;
+
+                // Normalize Data
+                const normalizedSales = sales.map(s => ({
+                    date: s.sale_date, // YYYY-MM-DD
+                    type: 'Sale',
+                    ref: s.ref_num,
+                    customer: s.customer_name,
+                    contact: s.customer_contact || s.customer_details,
+                    details: s.service_type,
+                    platform: s.affiliated_platform,
+                    // Financials
+                    b2b: s.b2b_price || 0,
+                    margin: s.margin || 0,
+                    discount: s.discount || 0,
+                    final: s.final_price || 0,
+                    advance: s.advance_received || 0,
+                    balance: s.balance_to_receive || 0,
+
+                    status: s.payment_status,
+                    original: s
+                }));
+
+                const normalizedTaxi = taxi.map(t => ({
+                    date: new Date(t.created_at).toISOString().split('T')[0],
+                    type: 'Taxi',
+                    ref: `TAXI-${t.id}`,
+                    customer: t.name,
+                    contact: t.phone,
+                    details: `From: ${t.details?.from || 'N/A'} To: ${t.details?.to || 'N/A'}`,
+                    // Taxi Specifics
+                    vehicle_num: t.details?.vehicle_id || 'Not Assigned',
+                    est_km: t.details?.est_km || 0,
+                    est_fare: t.details?.est_fare || 0,
+
+                    status: t.status,
+                    original: t
+                }));
+
+                // Combine and Sort
+                allData = [...normalizedSales, ...normalizedTaxi].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                applyFilters();
+
+            } catch (error) {
+                console.error("Error loading data:", error);
+                window.showAlert("Failed to load accounts data: " + error.message, "error");
+            }
+        }
+
+        window.viewDetails = (ref) => {
+            const item = allData.find(d => d.ref === ref);
+            if (!item) return;
+
+            const modalBody = document.getElementById('detailsModalBody');
+            let content = '';
+
+            // Common Customer Section
+            const customerSection = `
+                <div class="mb-4 p-3 bg-light rounded-3">
+                    <h6 class="fw-bold text-primary mb-3"><i class="fas fa-user-circle me-2"></i>Customer Information</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Name:</strong> ${item.customer}</div>
+                        <div class="col-md-6"><strong>Contact:</strong> ${item.contact || 'N/A'}</div>
+                        ${item.original.customer_email ? `<div class="col-12"><strong>Email:</strong> ${item.original.customer_email}</div>` : ''}
+                        ${item.original.requirements ? `<div class="col-12 mt-2"><strong>Notes:</strong> <span class="text-muted fst-italic">${item.original.requirements}</span></div>` : ''}
+                    </div>
+                </div>
+            `;
+
+            if (item.type === 'Sale') {
+                const s = item.original;
+                content = `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge badge-sale fs-6 px-3 py-2">Sale Record</span>
+                        <span class="text-muted font-monospace">${item.ref}</span>
+                    </div>
+
+                    ${customerSection}
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-success mb-3"><i class="fas fa-receipt me-2"></i>Service & Payment</h6>
+                        <table class="table table-bordered table-sm">
+                            <tr><td class="bg-light w-25">Service Type</td><td class="fw-bold">${s.service_type}</td></tr>
+                            <tr><td class="bg-light">Platform</td><td>${s.affiliated_platform || 'N/A'}</td></tr>
+                            <tr><td class="bg-light">Sale Date</td><td>${s.sale_date}</td></tr>
+                            <tr><td class="bg-light">Employee</td><td>${s.emp_email || 'N/A'}</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 text-center h-100">
+                                <div class="small text-muted mb-1">Total Amount</div>
+                                <div class="h4 mb-0 text-primary">₹${parseFloat(s.final_price || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 text-center h-100">
+                                <div class="small text-muted mb-1">Advance Check</div>
+                                <div class="h5 mb-0">₹${parseFloat(s.advance_received || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 text-center h-100 bg-light">
+                                <div class="small text-muted mb-1">Balance Due</div>
+                                <div class="h5 mb-0 text-danger">₹${parseFloat(s.balance_to_receive || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-secondary mb-2">Internal Financials</h6>
+                        <div class="row g-2 small text-muted">
+                            <div class="col-6">B2B Cost: ₹${s.b2b_price}</div>
+                            <div class="col-6">Margin: ₹${s.margin}</div>
+                            <div class="col-6">Adv Paid B2B: ₹${s.adv_paid_to_b2b || 0}</div>
+                            <div class="col-6">Direct Cust Pay: ₹${s.cust_direct_pay || 0}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Taxi
+                const t = item.original;
+                const d = t.details || {};
+                content = `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge badge-taxi fs-6 px-3 py-2">Taxi Booking</span>
+                        <span class="text-muted font-monospace">${item.ref}</span>
+                    </div>
+
+                    ${customerSection}
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-info mb-3"><i class="fas fa-route me-2"></i>Trip Details</h6>
+                        <div class="p-3 border rounded bg-white">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt text-danger me-3" style="width: 20px;"></i>
+                                <div><strong>From:</strong> ${d.from || 'N/A'}</div>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-flag-checkered text-success me-3" style="width: 20px;"></i>
+                                <div><strong>To:</strong> ${d.to || 'N/A'}</div>
+                            </div>
+                            <hr class="my-2">
+                            <div class="row g-2 mt-2">
+                                <div class="col-6"><strong>Vehicle:</strong> ${d.vehicle_id || 'Pending'}</div>
+                                <div class="col-6"><strong>Status:</strong> ${t.status}</div>
+                                <div class="col-6"><strong>Est. Distance:</strong> ${d.est_km ? d.est_km + ' km' : 'N/A'}</div>
+                                <div class="col-6"><strong>Est. Fare:</strong> ₹${d.est_fare || 'N/A'}</div>
+                            </div>
+                            ${d.est_notes ? `<div class="mt-2 pt-2 border-top small text-muted"><strong>Notes:</strong> ${d.est_notes}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            modalBody.innerHTML = content;
+            const bsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            bsModal.show();
+        };
+
+        window.applyFilters = () => {
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const typeInfo = document.getElementById('filter-type').value;
+            const monthVal = document.getElementById('filter-month').value; // YYYY-MM
+
+            filteredData = allData.filter(item => {
+                // Search Filter
+                const searchMatch = (
+                    item.ref.toLowerCase().includes(search) ||
+                    item.customer.toLowerCase().includes(search) ||
+                    (item.details && item.details.toLowerCase().includes(search))
+                );
+
+                // Type Filter
+                const typeMatch = (typeInfo === 'all') || (item.type === typeInfo);
+
+                // Month Filter
+                let monthMatch = true;
+                if (monthVal) {
+                    // item.date is YYYY-MM-DD
+                    monthMatch = item.date.startsWith(monthVal);
+                }
+
+                return searchMatch && typeMatch && monthMatch;
+            });
+
+            renderTable();
+        };
+
+        function renderTable() {
+            const tbody = document.getElementById('accountsTableBody');
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No records found matching your filters.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredData.map(item => {
+                let serviceHtml = '';
+                let financeHtml = '';
+
+                if (item.type === 'Sale') {
+                    serviceHtml = `
+                        <div class="fw-bold text-dark">${item.details}</div>
+                        <div class="small text-muted"><i class="fas fa-globe me-1"></i>${item.platform || 'N/A'}</div>
+                    `;
+                    financeHtml = `
+                        <div style="font-size: 0.8rem; line-height: 1.4;">
+                            <div class="d-flex justify-content-between"><span>B2B:</span> <span>₹${parseFloat(item.b2b).toLocaleString()}</span></div>
+                            ${item.margin > 0 ? `<div class="d-flex justify-content-between text-success"><span>Margin:</span> <span>+₹${parseFloat(item.margin).toLocaleString()}</span></div>` : ''}
+                            ${item.discount > 0 ? `<div class="d-flex justify-content-between text-danger"><span>Disc:</span> <span>-₹${parseFloat(item.discount).toLocaleString()}</span></div>` : ''}
+                            <div class="d-flex justify-content-between fw-bold border-top mt-1" style="border-top-style: dashed !important;"><span>Final:</span> <span>₹${parseFloat(item.final).toLocaleString()}</span></div>
+                            <div class="d-flex justify-content-between text-muted mt-1"><span>Adv:</span> <span>₹${parseFloat(item.advance).toLocaleString()}</span></div>
+                            ${item.balance > 0 ? `<div class="d-flex justify-content-between text-danger fw-bold"><span>Bal:</span> <span>₹${parseFloat(item.balance).toLocaleString()}</span></div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    // Taxi
+                    serviceHtml = `
+                        <div class="small fw-bold text-dark"><i class="fas fa-car me-1"></i>${item.vehicle_num}</div>
+                        <div class="small text-muted" style="max-width: 200px; white-space: normal;">${item.details}</div>
+                    `;
+                    financeHtml = `
+                        <div style="font-size: 0.8rem; line-height: 1.4;">
+                            <div class="d-flex justify-content-between"><span>Est. KM:</span> <span>${item.est_km} km</span></div>
+                            <div class="d-flex justify-content-between fw-bold border-top mt-1 text-primary"><span>Est. Fare:</span> <span>₹${parseFloat(item.est_fare || 0).toLocaleString()}</span></div>
+                        </div>
+                    `;
+                }
+
+                return `
+                <tr onclick="viewDetails('${item.ref}')">
+                    <td>${item.date}</td>
+                    <td><span class="badge ${item.type === 'Sale' ? 'badge-sale' : 'badge-taxi'}">${item.type}</span></td>
+                    <td class="fw-bold text-dark font-monospace">${item.ref}</td>
+                    <td>
+                        <div class="fw-bold">${item.customer}</div>
+                        <div class="small text-muted">${item.contact || ''}</div>
+                    </td>
+                    <td>${serviceHtml}</td>
+                    <td>${financeHtml}</td>
+                    <td><span class="badge bg-light text-dark border text-uppercase">${item.status}</span></td>
+                </tr>
+            `}).join('');
+        }
+
+        window.exportToCSV = () => {
+            if (filteredData.length === 0) {
+                window.showAlert("No data to export", "warning");
+                return;
+            }
+
+            const headers = [
+                "Date", "Type", "Ref ID", "Customer", "Contact",
+                "Service / Detail", "Platform", "Vehicle Num",
+                "B2B Price", "Margin", "Discount", "Final Price", "Advance", "Balance",
+                "Est KM (Taxi)", "Est Fare (Taxi)", "Status"
+            ];
+
+            const rows = filteredData.map(item => {
+                const isSale = item.type === 'Sale';
+                return [
+                    item.date,
+                    item.type,
+                    item.ref,
+                    item.customer,
+                    item.contact || '',
+                    item.details || '',
+                    isSale ? (item.platform || '') : '', // Platform (Sale only)
+                    !isSale ? (item.vehicle_num || '') : '', // Vehicle (Taxi only)
+
+                    // Financials (Sale)
+                    isSale ? item.b2b : '',
+                    isSale ? item.margin : '',
+                    isSale ? item.discount : '',
+                    isSale ? item.final : '',
+                    isSale ? item.advance : '',
+                    isSale ? item.balance : '',
+
+                    // Financials (Taxi)
+                    !isSale ? item.est_km : '',
+                    !isSale ? item.est_fare : '',
+
+                    item.status
+                ];
+            });
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            // Add Headers
+            csvContent += headers.join(",") + "\n";
+
+            // Add Rows
+            rows.forEach(rowArray => {
+                const row = rowArray.map(field => {
+                    const stringField = field === null || field === undefined ? '' : String(field);
+                    // Escape quotes and wrap in quotes if contains comma
+                    if (stringField.includes(",") || stringField.includes('"') || stringField.includes("\n")) {
+                        return `"${stringField.replace(/"/g, '""')}"`;
+                    }
+                    return stringField;
+                }).join(",");
+                csvContent += row + "\n";
+            });
+
+            // Trigger Download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `accounts_export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

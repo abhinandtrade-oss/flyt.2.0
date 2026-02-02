@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance - FLTT </title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+            /* Hidden for auth check */
+        }
+    </style>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        async function initAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                window.supabaseClient = supabase;
+                document.body.style.display = 'block';
+            }
+        }
+        initAuth();
+    </script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+
+                <!-- Insurance Grid Section -->
+                <div id="section-insurance">
+                    <h1 class="page-title">Insurance Portals</h1>
+                    <div class="booking-grid" id="insuranceGrid">
+                        <div class="col-12 text-center py-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal Viewer Section -->
+                <div id="section-booking-viewer" style="display: none;">
+                    <div class="viewer-header">
+                        <div class="d-flex align-items-center gap-3">
+                            <button onclick="closeViewer()" class="btn btn-sm btn-outline-light">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <h5 class="m-0" id="viewerTitle">Portal</h5>
+                        </div>
+                        <div class="viewer-controls">
+                            <div class="credential-pill" onclick="copyToClipboard('viewerUser')">
+                                <label>User</label>
+                                <span id="viewerUser">---</span>
+                                <i class="far fa-copy small opacity-50"></i>
+                            </div>
+                            <div class="credential-pill" onclick="copyToClipboard('viewerPass')">
+                                <label>Pass</label>
+                                <span id="viewerPass">---</span>
+                                <i class="far fa-copy small opacity-50"></i>
+                            </div>
+                            <button onclick="refreshIframe()" class="btn btn-sm btn-outline-light" title="Reload">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <a id="viewerExternal" href="#" target="_blank" class="btn btn-sm btn-outline-light"
+                                title="Open External">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="iframeWarning" class="alert alert-warning m-3 alert-dismissible fade show"
+                        style="display:none; position: absolute; z-index: 10; width: calc(100% - 2rem);">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Some sites may block embedding. If you see a
+                        blank page, please
+                        <a href="#" target="_blank" id="iframeWarningLink" class="fw-bold">click here to open in a new
+                            tab</a>.
+                        <button type="button" class="btn-close"
+                            onclick="this.parentElement.style.display='none'"></button>
+                    </div>
+                    <iframe id="viewerIframe" class="viewer-iframe"></iframe>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Failover Modal -->
+    <div class="modal fade" id="failoverModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 15px; border: none; border-top: 5px solid var(--primary); box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-info-circle text-primary opacity-75" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2" id="failoverSiteName">Portal Help</h4>
+                    <p class="text-muted mb-4 px-3">
+                        If the site is not loading, click the below button to open it in a new tab.
+                    </p>
+
+                    <div class="credential-box mb-4 text-start p-3 bg-light rounded-3 mx-3"
+                        style="border: 1px dashed #ddd;">
+                        <div class="mb-2 d-flex justify-content-between align-items-center">
+                            <span class="small text-muted fw-bold text-uppercase" style="font-size: 10px;">Username /
+                                ID</span>
+                            <span class="fw-600" id="failoverUser">---</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small text-muted fw-bold text-uppercase"
+                                style="font-size: 10px;">Password</span>
+                            <span class="fw-600" id="failoverPass">---</span>
+                        </div>
+                    </div>
+
+                    <div class="px-3">
+                        <a id="failoverLink" href="#" target="_blank"
+                            class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
+                            onclick="bootstrap.Modal.getInstance(document.getElementById('failoverModal')).hide()">
+                            <i class="fas fa-external-link-alt me-2"></i> Open Portal in New Tab
+                        </a>
+                        <button type="button" class="btn btn-link text-muted mt-2 small text-decoration-none"
+                            data-bs-dismiss="modal">I'll wait longer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/admin-announcement-checker.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { fetchContent } from '../assets/js/supabase-client.js';
+
+        const BOOKING_KEY = 'admin_booking_sites_json';
+        let bookingSites = [];
+        const failoverModal = new bootstrap.Modal(document.getElementById('failoverModal'));
+
+        async function loadBookingSites() {
+            const data = await fetchContent(BOOKING_KEY);
+            try { bookingSites = data ? JSON.parse(data) : []; } catch (e) { bookingSites = []; }
+        }
+
+        window.renderInsuranceCards = async () => {
+            await loadBookingSites();
+            const grid = document.getElementById('insuranceGrid');
+            grid.innerHTML = bookingSites
+                .filter(s => s.category === 'insurance')
+                .map(s => `
+                <div class="booking-card" onclick="${s.external ? `launchExternal('${s.id}')` : `openViewer('${s.id}')`}">
+                    <img src="https://www.google.com/s2/favicons?domain=${s.url}&sz=64" 
+                         onerror="this.src='../assets/images/resources/logo-1.png'; this.style.width='auto'; this.style.height='30px';"
+                         style="width: 48px; margin-bottom: 15px;">
+                    <h4>${s.name}</h4>
+                    <p class="text-muted small mb-0">${s.external ? 'Open External' : 'Launch Portal'}</p>
+                    ${s.external ? '<i class="fas fa-external-link-alt position-absolute" style="top:10px; right:10px; font-size:0.8rem; color:var(--primary); opacity:0.6;"></i>' : ''}
+                </div>
+            `).join('') || '<div class="col-12 text-center text-muted py-5">No insurance portals available.</div>';
+        };
+
+        window.launchExternal = async (id) => {
+            const site = bookingSites.find(s => s.id === id);
+            if (!site) return;
+
+            const confirmed = await window.showConfirm('Launch Portal', `Open ${site.name} in a new tab? You will be shown the credentials in an alert.`);
+            if (!confirmed) return;
+
+            window.showAlert(`Opening ${site.name}.\n\nCredentials:\nUser: ${site.user}\nPass: ${site.pass}`, 'info');
+            window.open(site.url, '_blank');
+        };
+
+        window.openViewer = (id) => {
+            const site = bookingSites.find(s => s.id === id);
+            if (!site) return;
+
+            document.getElementById('section-insurance').style.display = 'none';
+            document.getElementById('section-booking-viewer').style.display = 'flex';
+
+            const iframe = document.getElementById('viewerIframe');
+            const warning = document.getElementById('iframeWarning');
+
+            if (window.viewerFailoverTimer) clearTimeout(window.viewerFailoverTimer);
+            if (window.viewerAutoCloseTimer) clearTimeout(window.viewerAutoCloseTimer);
+            warning.style.display = 'none';
+            iframe.src = 'about:blank';
+
+            const uEl = document.getElementById('viewerUser');
+            const pEl = document.getElementById('viewerPass');
+            uEl.innerText = site.user;
+            uEl.dataset.value = site.user;
+            pEl.innerText = site.pass;
+            pEl.dataset.value = site.pass;
+
+            document.getElementById('viewerExternal').href = site.url;
+            document.getElementById('iframeWarningLink').href = site.url;
+            document.getElementById('viewerTitle').innerText = site.name;
+
+            document.getElementById('failoverSiteName').innerText = site.name;
+            document.getElementById('failoverUser').innerText = site.user;
+            document.getElementById('failoverPass').innerText = site.pass;
+            document.getElementById('failoverLink').href = site.url;
+
+            if (window.credClearTimer) clearTimeout(window.credClearTimer);
+            window.credClearTimer = setTimeout(() => {
+                uEl.innerText = '••••••';
+                pEl.innerText = '••••••';
+            }, 10000);
+
+            window.viewerFailoverTimer = setTimeout(() => {
+                failoverModal.show();
+                window.viewerAutoCloseTimer = setTimeout(() => {
+                    failoverModal.hide();
+                }, 5000);
+            }, 3000);
+
+            setTimeout(() => {
+                iframe.src = site.url;
+            }, 100);
+        };
+
+        window.closeViewer = () => {
+            document.getElementById('section-insurance').style.display = 'block';
+            document.getElementById('section-booking-viewer').style.display = 'none';
+            document.getElementById('viewerIframe').src = 'about:blank';
+            if (window.viewerFailoverTimer) clearTimeout(window.viewerFailoverTimer);
+            if (window.viewerAutoCloseTimer) clearTimeout(window.viewerAutoCloseTimer);
+        };
+
+        window.refreshIframe = () => {
+            const iframe = document.getElementById('viewerIframe');
+            iframe.src = iframe.src;
+        };
+
+        window.copyToClipboard = (id) => {
+            const el = document.getElementById(id);
+            const text = el.dataset.value || el.innerText;
+            navigator.clipboard.writeText(text);
+            window.showAlert('Copied to clipboard', 'success');
+        };
+
+        renderInsuranceCards();
+    </script>
+</body>
+
+</html>

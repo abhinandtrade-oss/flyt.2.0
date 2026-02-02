@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Announcements - FLTT</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .announcement-card {
+            border-left: 4px solid var(--primary);
+            transition: 0.3s;
+        }
+
+        .announcement-card:hover {
+            transform: translateX(5px);
+        }
+
+        .role-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: #475569;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 5px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .poster-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 10px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <h1 class="page-title">Announcements Management</h1>
+
+                <div class="row">
+                    <!-- Create/Edit Form -->
+                    <div class="col-md-5 mb-4">
+                        <div class="content-card">
+                            <div class="card-heading mb-4">
+                                <i class="fas fa-plus-circle"></i> <span id="form-title">Create New Announcement</span>
+                            </div>
+
+                            <form id="announcement-form">
+                                <input type="hidden" id="announcement-id">
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Start Date & Time</label>
+                                        <input type="datetime-local" id="start-date" class="form-control" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">End Date & Time</label>
+                                        <input type="datetime-local" id="end-date" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" style="display: none;">
+                                    <label class="form-label">Target Roles</label>
+                                    <div id="roles-checklist"
+                                        class="d-flex flex-wrap gap-3 p-2 border rounded bg-light">
+                                        <!-- Roles dynamically injected -->
+                                        <div class="form-check">
+                                            <input class="form-check-input role-cb" type="checkbox" value="super_admin"
+                                                id="role-super_admin">
+                                            <label class="form-check-label" for="role-super_admin">Super Admin</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input role-cb" type="checkbox" value="admin"
+                                                id="role-admin">
+                                            <label class="form-check-label" for="role-admin">Admin</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input role-cb" type="checkbox" value="viewer"
+                                                id="role-viewer">
+                                            <label class="form-check-label" for="role-viewer">Viewer</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mode-toggle">
+                                    <button type="button" class="mode-btn active" data-mode="text"
+                                        onclick="setMode('text')">Text Content</button>
+                                    <button type="button" class="mode-btn" data-mode="poster"
+                                        onclick="setMode('poster')">Poster Image</button>
+                                </div>
+
+                                <div id="text-fields">
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject</label>
+                                        <input type="text" id="subject" class="form-control"
+                                            placeholder="Flash Sale! / System Update">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Body Message</label>
+                                        <textarea id="body" class="form-control" rows="4"
+                                            placeholder="Enter announcement details..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="poster-fields" style="display: none;">
+                                    <div class="mb-3">
+                                        <label class="form-label">Poster Image URL</label>
+                                        <input type="url" id="poster-url" class="form-control"
+                                            placeholder="https://example.com/image.jpg" oninput="updatePosterPreview()">
+                                        <div id="poster-preview-container" class="poster-preview">
+                                            <span>Image Preview</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Redirect Link (Optional)</label>
+                                    <input type="url" id="redirect-url" class="form-control"
+                                        placeholder="https://fltt.com/offers">
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-custom flex-grow-1">
+                                        <i class="fas fa-paper-plane me-2"></i> Save Announcement
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- List View -->
+                    <div class="col-md-7 mb-4">
+                        <div class="content-card">
+                            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                <div class="card-heading m-0 b-0 border-0">
+                                    <i class="fas fa-list"></i> Existing Announcements
+                                </div>
+                                <button onclick="loadAnnouncements()" class="btn btn-outline-custom btn-sm">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+
+                            <div id="announcements-list" class="vstack gap-3">
+                                <!-- Announcements injected by JS -->
+                                <div class="text-center py-5 text-muted">
+                                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                                    <p>Loading announcements...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/admin-announcement-checker.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase, fetchContent } from '../assets/js/supabase-client.js';
+
+        let announcements = [];
+        let currentMode = 'text';
+
+        // --- Initialization ---
+        async function init() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.body.style.display = 'block';
+
+            // Set default dates
+            const now = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            document.getElementById('start-date').value = now.toISOString().slice(0, 16);
+            document.getElementById('end-date').value = tomorrow.toISOString().slice(0, 16);
+
+            await loadUserProfile();
+            await loadAnnouncements();
+            await fetchAndRenderRoles();
+        }
+
+        async function loadUserProfile() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const REGISTRY_KEY = 'admin_users_registry';
+            const { data: registryData } = await supabase.from('site_content').select('value').eq('key', REGISTRY_KEY).single();
+            let registry = [];
+            try { registry = registryData ? JSON.parse(registryData.value) : []; } catch (e) { }
+
+            const userEntry = registry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            const role = userEntry?.role || user.user_metadata?.role || (registry.length === 0 ? 'super_admin' : 'admin');
+            const name = userEntry?.name || user.user_metadata?.full_name || user.email.split('@')[0];
+
+            document.querySelector('.user-name').textContent = name;
+            document.querySelector('.user-role').textContent = role.replace('_', ' ');
+            document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        async function fetchAndRenderRoles() {
+            const ROLES_KEY = 'admin_roles_config';
+            const dRoles = await fetchContent(ROLES_KEY);
+            let rolesConfig = {};
+            try {
+                rolesConfig = dRoles ? JSON.parse(dRoles) : {
+                    'super_admin': {}, 'admin': {}, 'viewer': {}
+                };
+            } catch (e) {
+                rolesConfig = { 'super_admin': {}, 'admin': {}, 'viewer': {} };
+            }
+
+            const rolesChecklist = document.getElementById('roles-checklist');
+            rolesChecklist.innerHTML = Object.keys(rolesConfig)
+                .filter(role => !['super_admin', 'admin'].includes(role))
+                .map(role => `
+                <div class="form-check">
+                    <input class="form-check-input role-cb" type="checkbox" value="${role}" id="role-${role}">
+                    <label class="form-check-label" for="role-${role}">${role.replace('_', ' ').toUpperCase()}</label>
+                </div>
+            `).join('');
+        }
+
+        // --- UI Logic ---
+        window.setMode = (mode) => {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            document.getElementById('text-fields').style.display = mode === 'text' ? 'block' : 'none';
+            document.getElementById('poster-fields').style.display = mode === 'poster' ? 'block' : 'none';
+        };
+
+        window.updatePosterPreview = () => {
+            const url = document.getElementById('poster-url').value;
+            const container = document.getElementById('poster-preview-container');
+            if (url) {
+                container.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.parentElement.innerHTML='<span>Invalid Image URL</span>'">`;
+            } else {
+                container.innerHTML = '<span>Image Preview</span>';
+            }
+        };
+
+        window.resetForm = () => {
+            document.getElementById('announcement-form').reset();
+            document.getElementById('announcement-id').value = '';
+            document.getElementById('form-title').innerText = 'Create New Announcement';
+            setMode('text');
+            updatePosterPreview();
+
+            const now = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('start-date').value = now.toISOString().slice(0, 16);
+            document.getElementById('end-date').value = tomorrow.toISOString().slice(0, 16);
+        };
+
+        // --- Data Logic ---
+        window.loadAnnouncements = async () => {
+            const container = document.getElementById('announcements-list');
+            container.innerHTML = `
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                    <p>Fetching announcements...</p>
+                </div>
+            `;
+
+            try {
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                announcements = data;
+                renderAnnouncements();
+            } catch (err) {
+                console.error('Error:', err);
+                container.innerHTML = `<div class="alert alert-danger">Error loading announcements: ${err.message}</div>`;
+            }
+        };
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcements-list');
+            if (announcements.length === 0) {
+                container.innerHTML = '<div class="text-center py-5 text-muted">No announcements posted yet.</div>';
+                return;
+            }
+
+            const now = new Date();
+
+            container.innerHTML = announcements.map(anc => {
+                const start = new Date(anc.start_date);
+                const end = new Date(anc.end_date);
+
+                let statusClass = 'bg-success';
+                let statusText = 'Active';
+
+                if (now < start) {
+                    statusClass = 'bg-info';
+                    statusText = 'Upcoming';
+                } else if (now > end) {
+                    statusClass = 'bg-secondary';
+                    statusText = 'Expired';
+                }
+
+                const rolesHtml = anc.target_roles.map(r => `<span class="role-pill">${r}</span>`).join('');
+
+                return `
+                    <div class="content-card announcement-card p-3 mb-0" style="border-left-color: ${statusText === 'Active' ? '#1abc9c' : (statusText === 'Upcoming' ? '#3498db' : '#888ea8')}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="status-badge badge ${statusClass} mb-2">${statusText}</span>
+                                <h6 class="mb-0 fw-bold">${anc.poster_url ? '<i class="far fa-image me-1"></i> Poster Announcement' : anc.subject}</h6>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editAnnouncement('${anc.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteAnnouncement('${anc.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        ${anc.body ? `<p class="small text-muted mb-2 text-truncate-2">${anc.body}</p>` : ''}
+                        
+                        <div class="mb-2">
+                            ${rolesHtml}
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <span class="small text-muted">
+                                <i class="far fa-calendar-alt me-1"></i> 
+                                ${start.toLocaleDateString()} - ${end.toLocaleDateString()}
+                            </span>
+                            ${anc.redirect_url ? `<a href="${anc.redirect_url}" target="_blank" class="small text-primary text-decoration-none">Link <i class="fas fa-external-link-alt ms-1"></i></a>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.editAnnouncement = (id) => {
+            const anc = announcements.find(a => a.id == id);
+            if (!anc) return;
+
+            document.getElementById('announcement-id').value = anc.id;
+            document.getElementById('form-title').innerText = 'Edit Announcement';
+            document.getElementById('start-date').value = anc.start_date.slice(0, 16);
+            document.getElementById('end-date').value = anc.end_date.slice(0, 16);
+            document.getElementById('redirect-url').value = anc.redirect_url || '';
+
+            // Set roles
+            document.querySelectorAll('.role-cb').forEach(cb => {
+                cb.checked = anc.target_roles.includes(cb.value);
+            });
+
+            if (anc.poster_url) {
+                setMode('poster');
+                document.getElementById('poster-url').value = anc.poster_url;
+                updatePosterPreview();
+            } else {
+                setMode('text');
+                document.getElementById('subject').value = anc.subject || '';
+                document.getElementById('body').value = anc.body || '';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.deleteAnnouncement = async (id) => {
+            const confirmed = await window.showConfirm('Delete Announcement', 'Are you sure you want to delete this announcement?');
+            if (!confirmed) return;
+
+            try {
+                const { error } = await supabase.from('announcements').delete().eq('id', id);
+                if (error) throw error;
+
+                window.showAlert('Announcement deleted successfully', 'success');
+                loadAnnouncements();
+            } catch (err) {
+                window.showAlert('Failed to delete: ' + err.message, 'error');
+            }
+        };
+
+        document.getElementById('announcement-form').onsubmit = async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('announcement-id').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const redirectUrl = document.getElementById('redirect-url').value;
+
+            // Since Target Roles UI is hidden, we automatically target all roles except admins
+            let targetRoles = Array.from(document.querySelectorAll('.role-cb:checked')).map(cb => cb.value);
+
+            // If none checked (which will be the case for new ones since it's hidden), 
+            // we'll fetch all roles from config and filter admins out
+            if (targetRoles.length === 0) {
+                const ROLES_KEY = 'admin_roles_config';
+                const dRoles = await fetchContent(ROLES_KEY);
+                let rolesConfig = {};
+                try {
+                    rolesConfig = dRoles ? JSON.parse(dRoles) : { 'super_admin': {}, 'admin': {}, 'viewer': {} };
+                } catch (e) {
+                    rolesConfig = { 'super_admin': {}, 'admin': {}, 'viewer': {} };
+                }
+                targetRoles = Object.keys(rolesConfig).filter(r => !['super_admin', 'admin'].includes(r));
+            }
+
+            if (targetRoles.length === 0) {
+                // Fallback to 'staff' or 'viewer' if config is empty for some reason
+                targetRoles = ['staff', 'viewer'];
+            }
+
+            const payload = {
+                start_date: startDate,
+                end_date: endDate,
+                target_roles: targetRoles,
+                redirect_url: redirectUrl,
+                subject: null,
+                body: null,
+                poster_url: null
+            };
+
+            if (currentMode === 'text') {
+                payload.subject = document.getElementById('subject').value;
+                payload.body = document.getElementById('body').value;
+                if (!payload.subject) {
+                    window.showAlert('Subject is required for text announcements', 'warning');
+                    return;
+                }
+            } else {
+                payload.poster_url = document.getElementById('poster-url').value;
+                if (!payload.poster_url) {
+                    window.showAlert('Poster URL is required', 'warning');
+                    return;
+                }
+            }
+
+            try {
+                let error;
+                if (id) {
+                    const { error: err } = await supabase.from('announcements').update(payload).eq('id', id);
+                    error = err;
+                } else {
+                    const { error: err } = await supabase.from('announcements').insert(payload);
+                    error = err;
+                }
+
+                if (error) throw error;
+
+                window.showAlert('Announcement saved successfully!', 'success');
+                resetForm();
+                loadAnnouncements();
+            } catch (err) {
+                window.showAlert('Error saving announcement: ' + err.message, 'error');
+            }
+        };
+
+        window.handleLogout = async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        };
+
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Partner Portal | FLTT</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        /* Hidden Ticket Generator */
+        #ticket-generator {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 600px;
+            background: #fff;
+            padding: 0;
+            border-radius: 0;
+            overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .ticket-container {
+            border: 2px solid #e8604c;
+            /* Primary Color */
+            background: #fff;
+            position: relative;
+        }
+
+        .ticket-header {
+            background: #e8604c;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .ticket-body {
+            padding: 30px;
+        }
+
+        .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 10px;
+        }
+
+        .ticket-row:last-child {
+            border-bottom: none;
+        }
+
+        .ticket-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ticket-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .ticket-footer {
+            background: #f9f9f9;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+
+        .stamped {
+            position: absolute;
+            right: 40px;
+            bottom: 100px;
+            border: 3px solid #2ecc71;
+            color: #2ecc71;
+            font-size: 24px;
+            font-weight: 900;
+            padding: 10px 20px;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+
+        /* Portal Specific Navigation */
+        .portal-nav-pills {
+            background: #fff;
+            padding: 10px;
+            border-radius: var(--radius);
+            display: flex;
+            flex-wrap: wrap;
+            /* Added for mobile */
+            gap: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .portal-nav-link {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+
+        .portal-nav-link:hover {
+            background: #f8f9fa;
+            color: var(--primary);
+        }
+
+        .portal-nav-link.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Order Badges Custom */
+        .order-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-new {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Vehicle Preview Specifics */
+        .vehicle-preview-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 100px;
+        }
+
+        .live-preview-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .rent-summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+        }
+
+        .rent-summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .rent-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .rent-summary-item strong {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hidden Ticket Template for Image Generation -->
+    <div id="ticket-generator">
+        <div class="ticket-container">
+            <div class="ticket-header">
+                <div class="ticket-logo"><i class="fas fa-plane-departure me-2"></i>FLTT</div>
+                <div class="ticket-title">Booking Confirmation</div>
+            </div>
+            <div class="ticket-body">
+                <div class="ticket-row">
+                    <div>
+                        <div class="ticket-label">Customer Name</div>
+                        <div class="ticket-value" id="tktName">John Doe</div>
+                    </div>
+                    <div>
+                        <div class="ticket-label">Booking ID</div>
+                        <div class="ticket-value" id="tktId">#12345</div>
+                    </div>
+                </div>
+                <div class="ticket-row">
+                    <div>
+                        <div class="ticket-label">From</div>
+                        <div class="ticket-value" id="tktFrom">Kochi</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="ticket-label">To</div>
+                        <div class="ticket-value" id="tktTo">Munnar</div>
+                    </div>
+                </div>
+                <div class="ticket-row">
+                    <div>
+                        <div class="ticket-label">Vehicle</div>
+                        <div class="ticket-value" id="tktVehicle">Innova Crysta - KL 07 CD 1234</div>
+                    </div>
+                </div>
+                <div class="ticket-row">
+                    <div>
+                        <div class="ticket-label">Pickup Date</div>
+                        <div class="ticket-value" id="tktDate">Oct 24, 2026</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="ticket-label">Estimated Fare</div>
+                        <div class="ticket-value text-success" id="tktFare">₹4500</div>
+                    </div>
+                </div>
+                <div class="ticket-row">
+                    <div>
+                        <div class="ticket-label">Driver / Provider</div>
+                        <div class="ticket-value" id="tktDriver">Safe Travels Agency</div>
+                        <div class="small text-muted" id="tktContact">+91 99999 88888</div>
+                    </div>
+                </div>
+                <div class="stamped">CONFIRMED</div>
+            </div>
+            <div class="ticket-footer">
+                Thank you for choosing Fly Light Tours & Travels! <br>
+                For Support: +91 81295 66053
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title mb-0">Taxi & Bus Partner Portal</h1>
+                    <div id="platform-fee-display" class="badge bg-light text-muted border px-3 py-2">Platform Fee:
+                        Loading...</div>
+                </div>
+
+                <!-- Portal Navigation Tabs -->
+                <div class="portal-nav-pills">
+                    <button class="portal-nav-link active" onclick="switchTab('orders')">
+                        <i class="fas fa-list-ul me-2"></i> Manage Requests
+                    </button>
+                    <button class="portal-nav-link" onclick="switchTab('vehicle')">
+                        <i class="fas fa-car me-2"></i> My Vehicle & Rates
+                    </button>
+                    <button class="portal-nav-link" id="admin-settings-tab" onclick="switchTab('admin')"
+                        style="display: none;">
+                        <i class="fas fa-cog me-2"></i> Platform Settings
+                    </button>
+                </div>
+
+                <!-- Section: Orders -->
+                <div id="section-orders" class="portal-section">
+                    <div class="content-card">
+                        <div class="card-heading">
+                            <i class="fas fa-route"></i> Recent Booking Requests
+                            <div class="ms-auto d-flex gap-2">
+                                <button id="btn-enable-notif" onclick="requestNotificationPermission()"
+                                    class="btn btn-outline-danger btn-sm" style="display: none;"
+                                    title="Enable Desktop Notifications">
+                                    <i class="fas fa-bell-slash"></i>
+                                </button>
+                                <button onclick="testAudio()" class="btn btn-outline-warning btn-sm"
+                                    title="Test Alert Sound">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <button onclick="loadOrders()" class="btn btn-outline-custom btn-sm">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Customer Info</th>
+                                        <th>Route Details</th>
+                                        <th>Vehicle</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                            </div>
+                                            <span class="ms-2 text-muted">Loading requests...</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Vehicle -->
+                <div id="section-vehicle" class="portal-section" style="display: none;">
+                    <!-- Vehicle Selector -->
+                    <div id="vSelector" class="d-flex flex-wrap gap-2 mb-4">
+                        <!-- Dynamic Pills -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="content-card">
+                                <div class="card-heading d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-info-circle me-2"></i>Vehicle Information</span>
+                                    <span id="vCountBadge" class="badge bg-light text-dark border">1/5 Vehicles</span>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Vehicle Name / Model</label>
+                                        <input type="text" id="vName" class="form-control"
+                                            placeholder="e.g. Toyota Innova Crysta">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Vehicle Number (Unique ID)</label>
+                                        <input type="text" id="vNum" class="form-control"
+                                            placeholder="e.g. KL-07-CD-1234">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Category</label>
+                                        <select id="vCategory" class="form-select form-control">
+                                            <option value="taxi">Taxi / Car</option>
+                                            <option value="bus">Tourist Bus</option>
+                                            <option value="bike">Bike Taxi</option>
+                                            <option value="auto">Auto Taxi</option>
+                                            <option value="mini_bus">Mini Bus</option>
+                                            <option value="traveller">Traveller / Tempo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Thumbnail URL</label>
+                                        <input type="url" id="vThumb" class="form-control" placeholder="https://...">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Vehicle Description</label>
+                                        <textarea id="vDesc" class="form-control" rows="3"
+                                            placeholder="Tell customers about your vehicle features (AC, Music, Seating etc)..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Additional Image URLs (Comma Separated)</label>
+                                        <input type="text" id="vPhotos" class="form-control"
+                                            placeholder="URL1, URL2, URL3...">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" id="vEnabled" checked>
+                                            <label class="form-check-label fw-600 ms-2" for="vEnabled">Online /
+                                                Accepting Bookings</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-heading mt-4"><i class="fas fa-tags"></i> Rental Rates</div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Minimum Charge (₹)</label>
+                                        <input type="number" id="vMinCharge" class="form-control" placeholder="0.00">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Rate per KM (₹)</label>
+                                        <input type="number" id="vKmCharge" class="form-control" placeholder="0.00">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Waiting Charge per Hour (₹)</label>
+                                        <input type="number" id="vWaitCharge" class="form-control" placeholder="0.00">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Bata (Standard) (₹)</label>
+                                        <input type="number" id="vBata" class="form-control" placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3">
+                                    <button onclick="saveVehicleDetails()" class="btn btn-custom w-100 py-2 shadow-sm">
+                                        <i class="fas fa-save me-2"></i> Update Vehicle Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="vehicle-preview-card">
+                                <span class="live-preview-badge">Live Card Preview</span>
+                                <div id="vehiclePreview" class="text-center">
+                                    <!-- Dynamic Preview Content -->
+                                </div>
+                                <div id="rentSummary">
+                                    <!-- Dynamic Rent List -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Admin -->
+                <div id="section-admin" class="portal-section" style="display: none;">
+                    <div class="content-card">
+                        <div class="card-heading"><i class="fas fa-tools"></i> Platform Fee Configuration</div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Global Minimum Commission (₹)</label>
+                                <input type="number" id="pfMin" class="form-control" placeholder="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Commission Percentage (%)</label>
+                                <input type="number" id="pfPercent" class="form-control" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="savePlatformSettings()" class="btn btn-custom shadow-sm">Save Global
+                                Config</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Booking Details Modal -->
+            <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold" id="modalOrderTitle">Booking Request Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="row g-4">
+                                <!-- Customer & Route Info -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h6 class="fw-bold mb-3 text-primary"><i class="fas fa-user me-2"></i>Customer
+                                            Info</h6>
+                                        <div class="mb-2"><strong>Name:</strong> <span id="dtName"></span></div>
+                                        <div class="mb-2"><strong>Phone:</strong> <span id="dtPhone"></span>
+                                            <a href="#" id="dtWhatsApp" target="_blank" class="ms-2 text-success"><i
+                                                    class="fab fa-whatsapp"></i></a>
+                                        </div>
+                                        <hr>
+                                        <h6 class="fw-bold mb-3 text-primary"><i
+                                                class="fas fa-map-marker-alt me-2"></i>Trip Details</h6>
+                                        <div class="mb-2"><strong>From:</strong> <span id="dtFrom"></span></div>
+                                        <div class="mb-2"><strong>To:</strong> <span id="dtTo"></span></div>
+                                        <div class="mb-2"><strong>Service:</strong> <span id="dtService"
+                                                class="badge bg-white text-dark border"></span></div>
+                                        <div class="mb-2"><strong>Date:</strong> <span id="dtDate"></span></div>
+                                    </div>
+                                </div>
+                                <!-- Estimate & Actions -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 h-100">
+                                        <h6 class="fw-bold mb-3 text-primary"><i class="fas fa-calculator me-2"></i>Make
+                                            an Estimate</h6>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label class="small fw-bold">Distance (KM)</label>
+                                                <input type="number" id="estKM" class="form-control form-control-sm"
+                                                    placeholder="e.g. 50">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="small fw-bold">Total Fare (₹)</label>
+                                                <input type="number" id="estFare" class="form-control form-control-sm"
+                                                    placeholder="e.g. 1500">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="small fw-bold">Notes / Driver Details</label>
+                                                <textarea id="estNotes" class="form-control form-control-sm" rows="2"
+                                                    placeholder="Vehicle number, driver contact etc."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button onclick="saveEstimate()" class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-save me-1"></i> Save Estimate
+                                            </button>
+                                        </div>
+                                        <div class="mb-3 pt-2 border-top">
+                                            <label class="small fw-bold d-block mb-2">Notify Customer</label>
+                                            <div class="d-flex gap-3 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="notifyEmail"
+                                                        checked>
+                                                    <label class="form-check-label small"
+                                                        for="notifyEmail">Email</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="notifyWhatsApp"
+                                                        checked>
+                                                    <label class="form-check-label small"
+                                                        for="notifyWhatsApp">WhatsApp</label>
+                                                </div>
+                                            </div>
+                                            <textarea id="actionMessage" class="form-control form-control-sm" rows="3"
+                                                placeholder="Enter rejection reason or extra trip details here..."></textarea>
+                                        </div>
+                                        <hr>
+                                        <h6 class="fw-bold mb-3 text-primary"><i
+                                                class="fas fa-check-circle me-2"></i>Actions</h6>
+                                        <div class="d-flex gap-2">
+                                            <button id="btnAccept" class="btn btn-success flex-grow-1">Accept</button>
+                                            <button id="btnReject"
+                                                class="btn btn-outline-danger flex-grow-1">Reject</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="admin-footer">
+                &copy; 2026 <span>FLY LIGHT TOURS AND TRAVELS</span>. Partner Dashboard.
+            </footer>
+        </main>
+    </div>
+
+    <audio id="alertSound" src="../assets/Alert/alert.mp3" preload="auto"></audio>
+    <!-- Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase, fetchContent, saveContent, fetchAllContent } from '../assets/js/supabase-client.js';
+
+        let currentUser = null;
+        let currentUserRole = 'viewer';
+        let localOrders = [];
+        let userVehicles = []; // Store multiple vehicles
+        let driverVehicle = null; // Currently selected vehicle
+        let platformSettings = { min_charge: 0, percent: 0 };
+        // Audio Logic with Polling Support
+        const alertAudio = document.getElementById('alertSound');
+        let latestOrderId = 0;
+
+        // Unlock audio context on first user interaction
+        document.body.addEventListener('click', () => {
+            if (alertAudio) {
+                playAlertSound();
+            }
+        }, { once: true });
+
+        function playAlertSound() {
+            if (!alertAudio) {
+                console.error("Audio element not found!");
+                return;
+            }
+            alertAudio.currentTime = 0;
+            const promise = alertAudio.play();
+            if (promise !== undefined) {
+                promise.then(() => {
+                    console.log("Audio played successfully.");
+                    // Hide warning if it exists
+                    const warning = document.getElementById('audio-permission-warning');
+                    if (warning) warning.style.display = 'none';
+                }).catch(error => {
+                    if (error.name === 'NotAllowedError') {
+                        console.warn("Audio autoplay suppressed. User interaction required.");
+                        showAudioPermissionWarning();
+                    } else {
+                        console.error("Audio playback error:", error);
+                    }
+                });
+            }
+        }
+
+        function showAudioPermissionWarning() {
+            if (document.getElementById('audio-permission-warning')) return;
+            const div = document.createElement('div');
+            div.id = 'audio-permission-warning';
+            div.className = 'alert alert-warning alert-dismissible fade show fixed-top m-3 shadow-lg';
+            div.style.zIndex = '9999';
+            div.innerHTML = `
+                <i class="fas fa-volume-mute me-2"></i> 
+                <strong>Sound Auto-play Blocked</strong> 
+                <button class="btn btn-sm btn-dark ms-3" onclick="testAudio()">Enable Audio</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(div);
+        }
+
+        window.testAudio = () => {
+            playAlertSound();
+            alert("Testing Audio... If you don't hear anything, check your volume or browser permissions.");
+        };
+
+        // --- Notifications Logic ---
+        async function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                console.warn("This browser does not support desktop notifications.");
+                updateNotificationUI(false, true); // Indicate unsupported
+                return "unsupported";
+            }
+
+            if (Notification.permission === "granted") {
+                updateNotificationUI(true);
+                return "granted";
+            }
+
+            const permission = await Notification.requestPermission();
+            updateNotificationUI(permission === "granted");
+            if (permission === "granted") {
+                new Notification("Notifications Enabled", { body: "You will now receive alerts for new bookings." });
+            }
+            return permission;
+        }
+
+        function updateNotificationUI(granted, unsupported = false) {
+            const btn = document.getElementById('btn-enable-notif');
+            if (!btn) return;
+
+            if (unsupported) {
+                btn.style.display = 'none';
+                return;
+            }
+
+            if (granted) {
+                btn.style.display = 'none';
+            } else {
+                btn.style.display = 'inline-block';
+                if (Notification.permission === 'denied') {
+                    btn.disabled = true;
+                    btn.title = "Notifications are blocked in browser settings. Please enable them manually.";
+                    btn.innerHTML = '<i class="fas fa-bell-slash"></i> Blocked';
+                } else {
+                    btn.disabled = false;
+                    btn.title = "Enable Desktop Notifications";
+                    btn.innerHTML = '<i class="fas fa-bell-slash"></i>';
+                }
+            }
+        }
+
+        function setupRealtimeNotifications() {
+            // Check initial state
+            if ("Notification" in window) {
+                updateNotificationUI(Notification.permission === "granted");
+            } else {
+                updateNotificationUI(false, true); // Browser does not support notifications
+            }
+
+            supabase
+                .channel('new-enquiries')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'enquiries' }, payload => {
+                    // Just reload, loadOrders will handle the sound if it's a new relevant order
+                    if (payload.new.type === 'fleet') {
+                        loadOrders();
+                    }
+                })
+                .subscribe();
+        }
+
+        // --- Portal Core Logic ---
+        async function initPortal() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { data: { user } } = await supabase.auth.getUser();
+            currentUser = user;
+            window.supabaseClient = supabase;
+
+            // Load User Profile Info (Same as Dashboard)
+            const registryStr = await fetchContent('admin_users_registry');
+            let registry = [];
+            try { registry = registryStr ? JSON.parse(registryStr) : []; } catch (e) { }
+
+            const userEntry = registry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            currentUserRole = userEntry?.role || user.user_metadata?.role || 'viewer';
+            const name = userEntry?.name || user.user_metadata?.full_name || user.email.split('@')[0];
+
+            document.querySelector('.user-name').textContent = name;
+            document.querySelector('.user-role').textContent = currentUserRole.replace('_', ' ');
+            document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+
+            if (['admin', 'super_admin', 'taxi_admin'].includes(currentUserRole)) {
+                document.getElementById('admin-settings-tab').style.display = 'block';
+            }
+
+            document.body.style.display = 'block';
+
+            await Promise.all([
+                loadPlatformSettings(),
+                selectVehicle(),
+                loadEmailConfig()
+            ]);
+
+            await loadOrders(true); // Silent first load
+            setupRealtimeNotifications();
+
+            // Polling for live updates (backup to realtime)
+            setInterval(() => loadOrders(), 15000);
+        }
+
+        async function loadPlatformSettings() {
+            const pfStr = await fetchContent('taxi_platform_fee');
+            if (pfStr) {
+                platformSettings = JSON.parse(pfStr);
+                document.getElementById('pfMin').value = platformSettings.min_charge;
+                document.getElementById('pfPercent').value = platformSettings.percent;
+                document.getElementById('platform-fee-display').innerText = `Platform Fee: ₹${platformSettings.min_charge} + ${platformSettings.percent}%`;
+            }
+        }
+
+        window.selectVehicle = async (targetNum = null) => {
+            window.loadDriverVehicle = window.selectVehicle; // Alias for backward compatibility
+            console.log("selectVehicle called with:", targetNum);
+            const { data, error } = await supabase
+                .from('taxi_vehicles')
+                .select('*')
+                .eq('owner_id', currentUser.id);
+
+            if (data) {
+                userVehicles = data;
+                renderVehicleSelector(); // Re-render to update active state
+
+                if (targetNum === 'new') {
+                    clearVehicleForm();
+                    driverVehicle = null;
+                } else {
+                    // If targetNum is passed, use it; otherwise default to first vehicle
+                    driverVehicle = targetNum ? data.find(v => v.vehicle_num === targetNum) : data[0];
+                    if (driverVehicle) {
+                        populateVehicleForm(driverVehicle);
+                    } else if (data.length === 0) {
+                        clearVehicleForm();
+                    }
+                }
+                renderVehiclePreview();
+            }
+        }
+
+        function renderVehicleSelector() {
+            const container = document.getElementById('vSelector');
+            const countBadge = document.getElementById('vCountBadge');
+            countBadge.innerText = `${userVehicles.length}/5 Vehicles`;
+
+            container.innerHTML = userVehicles.map(v => {
+                // Escape quotes for HTML attribute context
+                const safeNum = v.vehicle_num.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                return `
+                <button class="portal-nav-link ${driverVehicle?.vehicle_num === v.vehicle_num ? 'active' : ''}" 
+                    style="border: 1px solid var(--border-color); font-size: 0.85rem;" 
+                    onclick="selectVehicle('${safeNum}')">
+                    <i class="fas fa-car me-1"></i> ${v.vehicle_num}
+                </button>
+            `}).join('');
+
+            if (userVehicles.length < 5) {
+                container.innerHTML += `
+                    <button class="portal-nav-link text-primary" 
+                        style="border: 1px dashed var(--primary); font-size: 0.85rem;" 
+                        onclick="selectVehicle('new')">
+                        <i class="fas fa-plus me-1"></i> Add Vehicle
+                    </button>
+                `;
+            }
+        }
+
+        function populateVehicleForm(v) {
+            document.getElementById('vName').value = v.name;
+            document.getElementById('vNum').value = v.vehicle_num;
+            document.getElementById('vCategory').value = v.category;
+            document.getElementById('vThumb').value = v.thumb_url;
+            document.getElementById('vEnabled').checked = v.is_enabled;
+            document.getElementById('vMinCharge').value = v.min_charge;
+            document.getElementById('vKmCharge').value = v.charge_per_km;
+            document.getElementById('vWaitCharge').value = v.waiting_charge_per_hour;
+            document.getElementById('vBata').value = v.bata;
+            document.getElementById('vDesc').value = v.details?.description || '';
+            document.getElementById('vPhotos').value = (v.details?.photo_urls || []).join(', ');
+
+            // Re-attach listeners to the new values
+            const inputs = ['vName', 'vNum', 'vCategory', 'vThumb', 'vDesc', 'vMinCharge', 'vKmCharge', 'vWaitCharge', 'vBata'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.oninput = renderVehiclePreview;
+            });
+        }
+
+        function clearVehicleForm() {
+            const inputs = ['vName', 'vNum', 'vThumb', 'vDesc', 'vPhotos', 'vMinCharge', 'vKmCharge', 'vWaitCharge', 'vBata'];
+            inputs.forEach(id => document.getElementById(id).value = '');
+            document.getElementById('vCategory').value = 'taxi';
+            document.getElementById('vEnabled').checked = true;
+            document.getElementById('vehiclePreview').innerHTML = '<div class="alert alert-info py-3 mb-0">Fill the form to register a new vehicle.</div>';
+            document.getElementById('rentSummary').innerHTML = '';
+        }
+
+        window.loadOrders = async (silent = false) => {
+            const tbody = document.getElementById('ordersTableBody');
+            let query = supabase.from('enquiries').select('*').eq('type', 'fleet');
+
+            if (!['admin', 'super_admin', 'taxi_admin'].includes(currentUserRole)) {
+                if (userVehicles.length > 0) {
+                    const vehicleNums = userVehicles.map(v => v.vehicle_num);
+                    // Filter: details->>vehicle_id matches any of the user's vehicles
+                    query = query.in('details->>vehicle_id', vehicleNums);
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Register your vehicle to see ride requests.</td></tr>';
+                    return;
+                }
+            }
+
+            const { data, error } = await query.order('created_at', { ascending: false });
+
+            if (data && data.length > 0) {
+                // Sound Logic: Play if new data is found and it's not the initial silent load
+                // Condition: Not silent AND (latestOrderId was 0 meaning empty list OR new order ID is greater)
+                if (!silent && (latestOrderId === 0 || data[0].id > latestOrderId)) {
+                    playAlertSound();
+                    if (Notification.permission === "granted") {
+                        const vNum = data[0].details?.vehicle_id;
+                        const vObj = userVehicles.find(v => v.vehicle_num === vNum);
+                        const vName = vObj ? vObj.name : (vNum || 'Vehicle');
+
+                        try {
+                            const notif = new Notification("Check Booking Request", {
+                                body: `${data[0].name} requests ${vName}.\nFrom: ${data[0].details?.from || 'N/A'}\nTo: ${data[0].details?.to || 'N/A'}`,
+                                icon: '../assets/images/favicons/fev.admin.png',
+                                tag: 'booking-' + data[0].id,
+                                requireInteraction: true,
+                                silent: false // We handle sound manually via audio element for consistency
+                            });
+                            notif.onclick = function () {
+                                window.focus();
+                                this.close();
+                                viewOrder(data[0].id);
+                            };
+                        } catch (e) {
+                            console.error("Notification creation failed:", e);
+                        }
+                    }
+                }
+                latestOrderId = data[0].id; // Update tracker
+
+                localOrders = data;
+                tbody.innerHTML = data.map(order => `
+                    <tr>
+                        <td>
+                            <div class="fw-bold">${new Date(order.created_at).toLocaleDateString()}</div>
+                            <div class="text-muted small">${new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">${order.name}</div>
+                            <div class="small"><i class="fab fa-whatsapp text-success me-1"></i>${order.phone || 'N/A'}</div>
+                        </td>
+                        <td>
+                            <div class="small"><strong class="text-primary">From:</strong> ${order.details?.from || 'N/A'}</div>
+                            <div class="small"><strong class="text-primary">To:</strong> ${order.details?.to || 'N/A'}</div>
+                        </td>
+                        <td><span class="badge bg-light text-dark border">${order.service || 'Fleet'}</span></td>
+                        <td><span class="order-badge badge-${order.status || 'new'}">${order.status || 'new'}</span></td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-custom" onclick="viewOrder('${order.id}')"><i class="fas fa-eye"></i></button>
+                                ${order.status === 'new' ? `<button class="btn btn-sm btn-success" onclick="updateOrderStatus('${order.id}', 'accepted')"><i class="fas fa-check"></i></button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">No booking requests found.</td></tr>';
+            }
+        }
+
+        window.viewOrder = async (id) => {
+            const order = localOrders.find(o => o.id == id);
+            if (!order) return;
+
+            // Ensure we have correct vehicle rates for calculation
+            let rates = driverVehicle;
+            if (!rates || rates.vehicle_num !== order.details?.vehicle_id) {
+                const { data } = await window.supabaseClient
+                    .from('taxi_vehicles')
+                    .select('min_charge, charge_per_km')
+                    .eq('vehicle_num', order.details?.vehicle_id)
+                    .maybeSingle();
+                if (data) rates = data;
+            }
+
+            document.getElementById('dtName').textContent = order.name;
+            document.getElementById('dtPhone').textContent = order.phone || 'N/A';
+            document.getElementById('dtWhatsApp').href = `https://wa.me/${order.phone?.replace(/[^0-9]/g, '')}`;
+            document.getElementById('dtFrom').textContent = order.details?.from || 'N/A';
+            document.getElementById('dtTo').textContent = order.details?.to || 'N/A';
+            document.getElementById('dtService').textContent = order.service || 'Fleet';
+            document.getElementById('dtDate').textContent = new Date(order.created_at).toLocaleString();
+
+            // Populate Estimate fields
+            document.getElementById('estKM').value = order.details?.est_km || '';
+            document.getElementById('estFare').value = order.details?.est_fare || '';
+            document.getElementById('estNotes').value = order.details?.est_notes || '';
+
+            // Auto-calculation listener
+            // Auto-calculation listener
+            const debouncedSave = debounce(async () => {
+                const btn = document.querySelector('#orderDetailModal button[onclick="saveEstimate()"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                await saveEstimate(true); // silent mode
+                btn.innerHTML = '<i class="fas fa-check"></i> Saved';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            }, 1000);
+
+            const inputIds = ['estKM', 'estFare', 'estNotes'];
+            inputIds.forEach(id => {
+                const el = document.getElementById(id);
+                el.oninput = (e) => {
+                    // Logic for estKM calculation
+                    if (id === 'estKM') {
+                        const distance = parseFloat(e.target.value) || 0;
+                        if (distance > 0 && rates) {
+                            const vehicleMin = parseFloat(rates.min_charge) || 0;
+                            const vehicleKm = parseFloat(rates.charge_per_km) || 0;
+                            let tripFare = distance * vehicleKm;
+                            if (tripFare < vehicleMin) tripFare = vehicleMin;
+                            const platMin = parseFloat(platformSettings.min_charge) || 0;
+                            const platPercent = parseFloat(platformSettings.percent) || 0;
+                            const platformFee = platMin + (tripFare * platPercent / 100);
+                            document.getElementById('estFare').value = Math.round(tripFare + platformFee);
+                        }
+                    }
+                    debouncedSave();
+                };
+            });
+
+            // Handle Actions
+            const modalEl = document.getElementById('orderDetailModal');
+            document.getElementById('actionMessage').value = ''; // Reset message
+
+            document.getElementById('btnAccept').onclick = async () => {
+                const msg = document.getElementById('actionMessage').value;
+                const useEmail = document.getElementById('notifyEmail').checked;
+                const useWA = document.getElementById('notifyWhatsApp').checked;
+
+                // Prepare default acceptance message if empty
+                let finalMsg = msg;
+                if (!finalMsg) {
+                    finalMsg = `Your trip has been ACCEPTED by ${driverVehicle?.name || 'Partner'}.\n\nPlease find your booking confirmation ticket attached.`;
+                }
+
+                // Generate Ticket
+                let ticketImg = null;
+                let ticketUrl = null;
+                try {
+                    window.showAlert('Generating Ticket...', 'info');
+                    ticketImg = await generateTicketImage(order, true);
+
+                    // Upload to Gridify
+                    if (ticketImg) {
+                        window.showAlert('Uploading Ticket...', 'info');
+                        ticketUrl = await uploadToGridify(ticketImg);
+                    }
+                } catch (e) {
+                    console.error("Ticket Process Failed", e);
+                }
+
+                if (useEmail) {
+                    const emailSent = await sendNotificationEmail(order, 'Booking Confirmation', finalMsg, ticketImg);
+                    if (emailSent) window.showAlert('Email sent successfully!', 'success');
+                    else window.showAlert('Email sending failed or status unknown.', 'warning');
+                }
+
+                if (useWA) {
+                    // Construct full data text for WhatsApp
+                    const fullData = constructWhatsAppMessage(order, driverVehicle, document.getElementById('estFare').value, "ACCEPTED", finalMsg, ticketUrl);
+                    sendNotificationWhatsApp(order, fullData, null);
+                }
+
+                window.updateOrderStatus(order.id, 'accepted');
+                bootstrap.Modal.getInstance(modalEl).hide();
+            };
+
+            document.getElementById('btnReject').onclick = async () => {
+                const msg = document.getElementById('actionMessage').value.trim();
+                const useEmail = document.getElementById('notifyEmail').checked;
+                const useWA = document.getElementById('notifyWhatsApp').checked;
+
+                if (!msg) {
+                    alert("Please provide a reason for rejection in the message box.");
+                    document.getElementById('actionMessage').focus();
+                    return;
+                }
+
+                let rejectionImg = null;
+                let rejectionUrl = null;
+                try {
+                    rejectionImg = await generateTicketImage(order, false, msg);
+                    if (rejectionImg) {
+                        try {
+                            window.showAlert('Uploading Rejection Notice...', 'info');
+                            rejectionUrl = await uploadToGridify(rejectionImg);
+                        } catch (uErr) { console.error("Upload failed", uErr); }
+                    }
+                } catch (e) { console.error(e); }
+
+                if (useEmail) {
+                    const emailSent = await sendNotificationEmail(order, 'Trip Update', `Your trip request was not accepted.\n\nReason: ${msg}`, rejectionImg);
+                    if (emailSent) window.showAlert('Email sent successfully!', 'success');
+                    else window.showAlert('Email sending failed or status unknown.', 'warning');
+                }
+
+                if (useWA) {
+                    const fullData = constructWhatsAppMessage(order, driverVehicle, "CANCELLED", "REJECTED", msg, rejectionUrl);
+                    sendNotificationWhatsApp(order, fullData, null);
+                }
+
+                window.updateOrderStatus(order.id, 'rejected');
+                bootstrap.Modal.getInstance(modalEl).hide();
+            };
+
+            // Set current order for estimate saving
+            window.currentOrderId = order.id;
+
+            let modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (!modalInstance) modalInstance = new bootstrap.Modal(modalEl);
+            modalInstance.show();
+        };
+
+        // Utility: Debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function constructWhatsAppMessage(order, vehicle, fare, status, note, ticketUrl) {
+            const dateStr = new Date(order.details?.journey_date || order.created_at).toLocaleString();
+            let text = `*FLY LIGHT TOURS & TRAVELS*\n`;
+            text += `*Booking Status: ${status}*\n\n`;
+            text += `*Booking ID:* #${order.id}\n`;
+            text += `*Customer:* ${order.name}\n`;
+            text += `*Trip:* ${order.details?.from || 'N/A'} ➔ ${order.details?.to || 'N/A'}\n`;
+            text += `*Date:* ${dateStr}\n`;
+
+            if (status === 'ACCEPTED') {
+                text += `*Vehicle:* ${vehicle?.name || 'Taxi'} (${vehicle?.vehicle_num || ''})\n`;
+                text += `*Driver Contact:* +91 81295 66053\n`;
+                text += `*Total Fare estimate:* ₹${fare}\n`;
+            }
+
+            if (note) text += `\n*Note:* ${note}\n`;
+            if (ticketUrl) text += `\n*Ticket/Receipt:* ${ticketUrl}\n`;
+
+            return text;
+        }
+
+        window.saveEstimate = async (silent = false) => {
+            if (!window.currentOrderId) return;
+            const order = localOrders.find(o => o.id == window.currentOrderId);
+            if (!order) return;
+
+            const est_km = document.getElementById('estKM').value;
+            const est_fare = document.getElementById('estFare').value;
+            const est_notes = document.getElementById('estNotes').value;
+
+            const details = { ...order.details, est_km, est_fare, est_notes };
+
+            const { error } = await window.supabaseClient.from('enquiries').update({ details }).eq('id', window.currentOrderId);
+            if (!error) {
+                if (!silent) window.showAlert('Estimate saved successfully!', 'success');
+                // Update local model
+                order.details = details;
+            } else {
+                window.showAlert('Error saving estimate: ' + error.message, 'error');
+            }
+        };
+
+        window.updateOrderStatus = async (id, status) => {
+            const { error } = await window.supabaseClient.from('enquiries').update({ status }).eq('id', id);
+            if (!error) {
+                window.showAlert(`Booking ${status} successfully!`, 'success');
+                loadOrders();
+            } else {
+                window.showAlert('Error updating status: ' + error.message, 'error');
+            }
+        };
+
+        window.saveVehicleDetails = async () => {
+            const name = document.getElementById('vName').value;
+            const vehicle_num = document.getElementById('vNum').value.trim();
+            const category = document.getElementById('vCategory').value;
+            const thumb_url = document.getElementById('vThumb').value;
+            const is_enabled = document.getElementById('vEnabled').checked;
+            const min_charge = parseFloat(document.getElementById('vMinCharge').value) || 0;
+            const charge_per_km = parseFloat(document.getElementById('vKmCharge').value) || 0;
+            const waiting_charge_per_hour = parseFloat(document.getElementById('vWaitCharge').value) || 0;
+            const bata = parseFloat(document.getElementById('vBata').value) || 0;
+            const description = document.getElementById('vDesc').value;
+            const photo_urls = document.getElementById('vPhotos').value.split(',').map(u => u.trim()).filter(u => u);
+
+            if (!name || !vehicle_num) { window.showAlert('Name and Number are required', 'warning'); return; }
+
+            const vehicleData = {
+                vehicle_num, owner_id: currentUser.id, owner_email: currentUser.email,
+                name, category, thumb_url, is_enabled, min_charge, charge_per_km,
+                waiting_charge_per_hour, bata, is_approved: true,
+                details: { description, photo_urls }
+            };
+
+            const confirmed = await window.showConfirm('Update Profile', 'Save your vehicle and rate settings?');
+            if (!confirmed) return;
+
+            const { error } = await supabase.from('taxi_vehicles').upsert(vehicleData, { onConflict: 'vehicle_num' });
+
+            if (!error) {
+                window.showAlert('Vehicle profile updated!', 'success');
+                selectVehicle(vehicle_num); // Refresh list and select the saved one
+                setTimeout(() => loadOrders(), 500);
+            } else {
+                window.showAlert('Failed to save: ' + error.message, 'error');
+            }
+        };
+
+        window.savePlatformSettings = async () => {
+            const min_charge = parseFloat(document.getElementById('pfMin').value) || 0;
+            const percent = parseFloat(document.getElementById('pfPercent').value) || 0;
+            const confirmed = await window.showConfirm('Global Update', 'Apply platform fee changes site-wide?');
+            if (!confirmed) return;
+
+            const res = await saveContent('taxi_platform_fee', JSON.stringify({ min_charge, percent }));
+            if (!res.error) {
+                window.showAlert('Global settings applied!', 'success');
+                loadPlatformSettings();
+            } else {
+                window.showAlert('Error saving: ' + res.error.message, 'error');
+            }
+        };
+
+        function renderVehiclePreview() {
+            const thumbUrl = document.getElementById('vThumb').value || '../assets/images/resources/logo-1.png';
+            const name = document.getElementById('vName').value || 'Vehicle Name';
+            const vNum = document.getElementById('vNum').value || 'NO-NUMBER';
+            const desc = document.getElementById('vDesc').value;
+            const category = document.getElementById('vCategory').value;
+
+            document.getElementById('vehiclePreview').innerHTML = `
+                <img src="${thumbUrl}" class="img-fluid rounded-3 mb-3 shadow-sm" style="height: 160px; width: 100%; object-fit: cover;" onerror="this.src='../assets/images/resources/logo-1.png'">
+                <h5 class="fw-bold mb-1">${name}</h5>
+                <div class="text-muted small mb-3">${vNum}</div>
+                <span class="badge bg-primary-light text-primary border border-primary-light mb-3 px-3">${category.toUpperCase()}</span>
+                <p class="small text-muted mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${desc || 'No description provided.'}</p>
+            `;
+
+            const min = document.getElementById('vMinCharge').value || 0;
+            const km = document.getElementById('vKmCharge').value || 0;
+            const wait = document.getElementById('vWaitCharge').value || 0;
+            const bata = document.getElementById('vBata').value || 0;
+
+            document.getElementById('rentSummary').innerHTML = `
+                <ul class="rent-summary-list">
+                    <li class="rent-summary-item"><span>Min. Charge</span><strong>₹${min}</strong></li>
+                    <li class="rent-summary-item"><span>Per KM</span><strong>₹${km}</strong></li>
+                    <li class="rent-summary-item"><span>Waiting / hr</span><strong>₹${wait}</strong></li>
+                    <li class="rent-summary-item"><span>Bata</span><strong>₹${bata}</strong></li>
+                </ul>
+            `;
+        }
+
+        let emailConfig = null;
+
+        async function loadEmailConfig() {
+            const { data } = await supabase
+                .from('user_email_config')
+                .select('*')
+                .eq('id', currentUser.id)
+                .maybeSingle();
+            emailConfig = data;
+        }
+
+        async function generateTicketImage(order, isAccept = true, reason = '') {
+            // Populate Ticket Data
+            document.getElementById('tktName').textContent = order.name;
+            document.getElementById('tktId').textContent = `#${order.id}`;
+            document.getElementById('tktFrom').textContent = order.details?.from || 'N/A';
+            document.getElementById('tktTo').textContent = order.details?.to || 'N/A';
+            document.getElementById('tktDate').textContent = new Date(order.details?.journey_date || order.created_at).toLocaleDateString();
+
+            if (isAccept) {
+                const fare = document.getElementById('estFare').value;
+                document.getElementById('tktFare').textContent = `₹${fare}`;
+                document.getElementById('tktVehicle').textContent = `${driverVehicle?.name || 'Taxi'} (${driverVehicle?.vehicle_num || ''})`;
+                document.getElementById('tktDriver').textContent = currentUser.user_metadata?.full_name || 'Partner Driver';
+                const email = emailConfig?.sender_email || currentUser.email;
+                document.getElementById('tktContact').textContent = `Email: ${email} | Ph: +91 81295 66053`;
+                document.querySelector('.stamped').textContent = "CONFIRMED";
+                document.querySelector('.stamped').style.borderColor = "#2ecc71";
+                document.querySelector('.stamped').style.color = "#2ecc71";
+            } else {
+                document.getElementById('tktFare').textContent = "CANCELLED";
+                document.getElementById('tktVehicle').textContent = "N/A";
+                document.getElementById('tktDriver').textContent = "Request Rejected";
+                document.getElementById('tktContact').textContent = reason;
+                document.querySelector('.stamped').textContent = "REJECTED";
+                document.querySelector('.stamped').style.borderColor = "#e74c3c";
+                document.querySelector('.stamped').style.color = "#e74c3c";
+            }
+
+            // Generate Canvas
+            const element = document.getElementById('ticket-generator');
+            /* Render logic inside a promise */
+            return html2canvas(element, { scale: 2 }).then(canvas => {
+                return canvas.toDataURL('image/png');
+            });
+        }
+
+        // Helper: Convert DataURL to Blob
+        function dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+
+        // Upload to Gridify Worker
+        async function uploadToGridify(dataUrl) {
+            // Localhost Bypass to avoid CORS errors during dev
+            if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+                console.warn("Skipping Gridify Upload on Localhost (CORS restriction). Use a live URL to test uploads.");
+                return null;
+            }
+
+            const blob = dataURLtoBlob(dataUrl);
+            const formData = new FormData();
+            formData.append('file', blob, 'ticket.png');
+            formData.append('key', 'FLTT'); // Authentication Keyword
+
+            try {
+                const response = await fetch('https://gridify-image-uploader.sabhinand5.workers.dev/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(`Server status: ${response.status}`);
+                const result = await response.json();
+                console.log("Upload Result:", result);
+                return result.url || result.link || result.fileUrl || result.secure_url;
+            } catch (error) {
+                console.error("Upload failed", error);
+                window.showAlert("Upload Failed! If on Localhost, check CORS or Deploy site.", "error");
+                // Attempt to return null so the flow continues without link
+                return null;
+            }
+        }
+
+        async function sendNotificationEmail(order, subject, bodyContent, imageBase64 = null) {
+            if (!emailConfig || !emailConfig.google_script_url) {
+                console.warn("Email config missing. Skipping email.");
+                return false;
+            }
+
+            let htmlBody = `<p style="white-space: pre-wrap;">${bodyContent}</p>`;
+            if (imageBase64) {
+                htmlBody += `<br><img src="${imageBase64}" style="max-width: 100%; border: 1px solid #ddd; border-radius: 8px;">`;
+            }
+
+            const payload = {
+                to: order.details?.email || order.email || '',
+                subject: `${subject} | FLTT Ref #${order.id}`,
+                from_name: "FLTT Taxi Partner",
+                from_email: emailConfig.sender_email || currentUser.email,
+                body: `${htmlBody}<br><hr><p><small>Sent via FLTT Partner Portal</small></p>`
+            };
+
+            if (!payload.to) {
+                console.warn("No customer email found in order details.");
+                return false;
+            }
+
+            try {
+                // First try standard CORS to get status
+                let response = await fetch(emailConfig.google_script_url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' }, // Using text/plain prevents preflight in some cases if GAS is set up right
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    console.log("Email sent successfully via standard CORS.");
+                    return true;
+                } else {
+                    console.warn("Standard CORS failed, trying no-cors fallback...", response.status);
+                    throw new Error("CORS failed");
+                }
+            } catch (e) {
+                try {
+                    // Fallback to no-cors
+                    await fetch(emailConfig.google_script_url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    console.log("Email trigger sent (no-cors).");
+                    // We return true because in no-cors we assume it went through if no network error
+                    return true;
+                } catch (innerE) {
+                    console.error("Email send failed completely", innerE);
+                    return false;
+                }
+            }
+        }
+
+        function sendNotificationWhatsApp(order, text, imageUrl = null) {
+            const phone = order.details?.whatsapp_number || order.whatsapp_number || order.phone?.replace(/[^0-9]/g, '');
+            if (!phone) {
+                window.showAlert('No WhatsApp number found!', 'warning');
+                return;
+            }
+
+            let finalMsg = text;
+            if (imageUrl && !finalMsg.includes(imageUrl)) {
+                finalMsg += `\n\nLink: ${imageUrl}`;
+            }
+
+            let finalUrl = `https://wa.me/${phone}?text=${encodeURIComponent(finalMsg)}`;
+            window.open(finalUrl, '_blank');
+        }
+
+        window.handleLogout = async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        };
+
+        window.switchTab = (tab) => {
+            const btns = document.querySelectorAll('.portal-nav-link');
+            btns.forEach(t => t.classList.remove('active'));
+            // Try to find the button that was clicked
+            const activeBtn = Array.from(btns).find(b => b.getAttribute('onclick')?.includes(`'${tab}'`));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            document.querySelectorAll('.portal-section').forEach(s => s.style.display = 'none');
+            const targetSection = document.getElementById(`section-${tab}`);
+            if (targetSection) targetSection.style.display = 'block';
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initPortal();
+        });
+    </script>
+</body>
+
+</html>

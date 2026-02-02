@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Public Announcements - FLTT</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .announcement-card {
+            border-left: 4px solid #1abc9c;
+            transition: 0.3s;
+        }
+
+        .announcement-card:hover {
+            transform: translateX(5px);
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 5px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #fff;
+            color: #1abc9c;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .poster-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 10px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <h1 class="page-title">Public Announcements Management</h1>
+
+                <div class="row">
+                    <!-- Create/Edit Form -->
+                    <div class="col-md-5 mb-4">
+                        <div class="content-card">
+                            <div class="card-heading mb-4">
+                                <i class="fas fa-globe"></i> <span id="form-title">Create Public Announcement</span>
+                            </div>
+
+                            <form id="public-announcement-form">
+                                <input type="hidden" id="announcement-id">
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Start Date & Time</label>
+                                        <input type="datetime-local" id="start-date" class="form-control" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">End Date & Time</label>
+                                        <input type="datetime-local" id="end-date" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="mode-toggle">
+                                    <button type="button" class="mode-btn active" data-mode="text"
+                                        onclick="setMode('text')">Text Content</button>
+                                    <button type="button" class="mode-btn" data-mode="poster"
+                                        onclick="setMode('poster')">Poster Image</button>
+                                </div>
+
+                                <div id="text-fields">
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject</label>
+                                        <input type="text" id="subject" class="form-control"
+                                            placeholder="Holiday Pack Offer! / New Route Information">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Body Message</label>
+                                        <textarea id="body" class="form-control" rows="4"
+                                            placeholder="Enter interesting details for the public..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="poster-fields" style="display: none;">
+                                    <div class="mb-3">
+                                        <label class="form-label">Poster Image URL</label>
+                                        <input type="url" id="poster-url" class="form-control"
+                                            placeholder="https://example.com/promo.jpg" oninput="updatePosterPreview()">
+                                        <div id="poster-preview-container" class="poster-preview">
+                                            <span>Image Preview</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Redirect Link (Optional)</label>
+                                    <input type="url" id="redirect-url" class="form-control"
+                                        placeholder="https://fltt.com/offers">
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1"
+                                        style="background:#1abc9c; border:none;">
+                                        <i class="fas fa-paper-plane me-2"></i> Publish to Website
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- List View -->
+                    <div class="col-md-7 mb-4">
+                        <div class="content-card">
+                            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                <div class="card-heading m-0 b-0 border-0">
+                                    <i class="fas fa-th-list"></i> Active Public Messages
+                                </div>
+                                <button onclick="loadAnnouncements()" class="btn btn-outline-custom btn-sm">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+
+                            <div id="announcements-list" class="vstack gap-3">
+                                <div class="text-center py-5 text-muted">
+                                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                                    <p>Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        let announcements = [];
+        let currentMode = 'text';
+
+        async function init() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) { window.location.href = 'login.html'; return; }
+            document.body.style.display = 'block';
+
+            const now = new Date();
+            const weekLater = new Date();
+            weekLater.setDate(weekLater.getDate() + 7);
+            document.getElementById('start-date').value = now.toISOString().slice(0, 16);
+            document.getElementById('end-date').value = weekLater.toISOString().slice(0, 16);
+
+            await loadUserProfile();
+            await loadAnnouncements();
+        }
+
+        async function loadUserProfile() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            const { data: registryData } = await supabase.from('site_content').select('value').eq('key', 'admin_users_registry').single();
+            let registry = []; try { registry = JSON.parse(registryData.value); } catch (e) { }
+            const userEntry = registry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            const role = userEntry?.role || 'admin';
+            const name = userEntry?.name || user.email;
+            document.querySelector('.user-name').textContent = name;
+            document.querySelector('.user-role').textContent = role;
+            document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        window.setMode = (mode) => {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+            document.getElementById('text-fields').style.display = mode === 'text' ? 'block' : 'none';
+            document.getElementById('poster-fields').style.display = mode === 'poster' ? 'block' : 'none';
+        };
+
+        window.updatePosterPreview = () => {
+            const url = document.getElementById('poster-url').value;
+            const container = document.getElementById('poster-preview-container');
+            container.innerHTML = url ? `<img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">` : '<span>Image Preview</span>';
+        };
+
+        window.resetForm = () => {
+            document.getElementById('public-announcement-form').reset();
+            document.getElementById('announcement-id').value = '';
+            document.getElementById('form-title').innerText = 'Create Public Announcement';
+            setMode('text');
+            updatePosterPreview();
+        };
+
+        window.loadAnnouncements = async () => {
+            const container = document.getElementById('announcements-list');
+            try {
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .contains('target_roles', ['public'])
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                announcements = data;
+                renderAnnouncements();
+            } catch (err) {
+                container.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+            }
+        };
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcements-list');
+            if (announcements.length === 0) {
+                container.innerHTML = '<div class="text-center py-5 text-muted">No public announcements active.</div>';
+                return;
+            }
+            const now = new Date();
+            container.innerHTML = announcements.map(anc => {
+                const start = new Date(anc.start_date);
+                const end = new Date(anc.end_date);
+                const status = now < start ? 'Upcoming' : (now > end ? 'Expired' : 'Live');
+                const badgeColor = status === 'Live' ? 'bg-success' : 'bg-secondary';
+
+                return `
+                    <div class="content-card announcement-card p-3 mb-0" style="border-left-color: ${status === 'Live' ? '#1abc9c' : '#bdc3c7'}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="status-badge badge ${badgeColor} mb-2">${status}</span>
+                                <h6 class="mb-0 fw-bold">${anc.subject || 'Poster Ad'}</h6>
+                                <p class="small text-muted mb-0">${start.toLocaleDateString()} - ${end.toLocaleDateString()}</p>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editAnnouncement('${anc.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteAnnouncement('${anc.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.editAnnouncement = (id) => {
+            const anc = announcements.find(a => a.id == id);
+            if (!anc) return;
+            document.getElementById('announcement-id').value = anc.id;
+            document.getElementById('form-title').innerText = 'Edit Public Announcement';
+            document.getElementById('start-date').value = anc.start_date.slice(0, 16);
+            document.getElementById('end-date').value = anc.end_date.slice(0, 16);
+            document.getElementById('redirect-url').value = anc.redirect_url || '';
+            if (anc.poster_url) {
+                setMode('poster'); document.getElementById('poster-url').value = anc.poster_url; updatePosterPreview();
+            } else {
+                setMode('text'); document.getElementById('subject').value = anc.subject || ''; document.getElementById('body').value = anc.body || '';
+            }
+        };
+
+        window.deleteAnnouncement = async (id) => {
+            if (!confirm('Are you sure?')) return;
+            await supabase.from('announcements').delete().eq('id', id);
+            loadAnnouncements();
+        };
+
+        document.getElementById('public-announcement-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('announcement-id').value;
+            const payload = {
+                start_date: document.getElementById('start-date').value,
+                end_date: document.getElementById('end-date').value,
+                target_roles: ['public'],
+                redirect_url: document.getElementById('redirect-url').value,
+                subject: currentMode === 'text' ? document.getElementById('subject').value : null,
+                body: currentMode === 'text' ? document.getElementById('body').value : null,
+                poster_url: currentMode === 'poster' ? document.getElementById('poster-url').value : null
+            };
+
+            try {
+                const { error } = id
+                    ? await supabase.from('announcements').update(payload).eq('id', id)
+                    : await supabase.from('announcements').insert(payload);
+                if (error) throw error;
+                resetForm();
+                loadAnnouncements();
+                alert('Published successfully!');
+            } catch (err) { alert(err.message); }
+        };
+
+        window.handleLogout = async () => { await supabase.auth.signOut(); window.location.href = 'login.html'; };
+        init();
+    </script>
+</body>
+
+</html>

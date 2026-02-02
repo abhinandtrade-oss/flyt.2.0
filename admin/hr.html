@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Management - FLTT </title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .hr-tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .hr-tab {
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .hr-tab.active {
+            color: var(--primary);
+            background: rgba(232, 96, 76, 0.1);
+        }
+
+        .role-perm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .perm-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .user-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-super {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .badge-admin {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-viewer {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .password-preview {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            border: 1px dashed #cbd5e1;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <h1 class="page-title">HR & User Management</h1>
+
+                <div class="hr-tabs">
+                    <div class="hr-tab active" onclick="switchHRTab('users')">User Registry</div>
+                    <div id="tab-roles-link" class="hr-tab" onclick="switchHRTab('roles')">Roles & Permissions</div>
+                </div>
+
+                <!-- User Management Section -->
+                <div id="hr-section-users">
+                    <div class="row">
+                        <!-- Create User Card -->
+                        <div class="col-md-4 mb-4">
+                            <div class="content-card h-100">
+                                <div class="card-heading mb-4">
+                                    <i class="fas fa-user-plus text-primary"></i> Create New User
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-600">User Full Name</label>
+                                    <input type="text" id="newUserName" class="form-control" placeholder="Full Name">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-600">Email Address</label>
+                                    <input type="email" id="newUserEmail" class="form-control"
+                                        placeholder="user@fltt.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-600">Assign Role</label>
+                                    <select id="newUserRole" class="form-select">
+                                        <!-- Roles dynamically injected -->
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <button onclick="generateUser()" class="btn btn-custom w-100 py-2">
+                                        <i class="fas fa-magic me-2"></i> Generate User Account
+                                    </button>
+                                </div>
+                                <div id="generatedPassArea" style="display: none;">
+                                    <label class="form-label small text-muted">Temporary Password</label>
+                                    <div class="password-preview">
+                                        <span id="tempPass">********</span>
+                                        <button class="btn btn-sm btn-light" onclick="copyTempPass()">
+                                            <i class="far fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <button onclick="sendVerification()"
+                                        class="btn btn-sm btn-outline-primary w-100 mt-3">
+                                        <i class="fas fa-envelope me-2"></i> Send Verification Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User List Explorer -->
+                        <div class="col-md-8 mb-4">
+                            <div class="content-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                    <div class="card-heading m-0 b-0 border-0">
+                                        <i class="fas fa-users"></i> Active Staff
+                                    </div>
+                                    <button onclick="renderUserList()" class="btn btn-outline-custom btn-sm">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Staff Email</th>
+                                                <th>Role</th>
+                                                <th>Status</th>
+                                                <th>Verification</th>
+                                                <th style="width: 180px; text-align: center;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userTableBody">
+                                            <!-- Data injected by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Management Section (Super Admin only usually) -->
+                <div id="hr-section-roles" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-5 mb-4">
+                            <div class="content-card">
+                                <div class="card-heading mb-4">
+                                    <i class="fas fa-shield-alt text-primary"></i> Define New Role
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-600">Role ID (Slug)</label>
+                                    <input type="text" id="newRoleSlug" class="form-control"
+                                        placeholder="e.g. content_manager">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-600">Permissions (Select accessible pages)</label>
+                                    <div class="role-perm-grid" id="permChecklist">
+                                        <div class="text-muted small">Loading pages...</div>
+                                    </div>
+                                </div>
+                                <button onclick="saveRole()" class="btn btn-custom w-100">Create/Update Role</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 mb-4">
+                            <div class="content-card">
+                                <div class="card-heading mb-4">Existing Roles Configuration</div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Role</th>
+                                                <th>Accessible Pages</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rolesConfigTable">
+                                            <!-- Data injected by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Full Name</label>
+                        <input type="text" id="editUserName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Email Address</label>
+                        <input type="email" id="editUserEmail" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Role</label>
+                        <select id="editUserRole" class="form-select">
+                            <!-- Roles injected -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Account Status</label>
+                        <select id="editUserStatus" class="form-select">
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="updateUserRegistry()" class="btn btn-custom">Update User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/admin-announcement-checker.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase, saveContent, fetchContent, supabaseUrl, supabaseKey } from '../assets/js/supabase-client.js';
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const ROLES_KEY = 'admin_roles_config';
+        const REGISTRY_KEY = 'admin_users_registry';
+
+        let rolesConfig = {};
+        let userRegistry = [];
+        let currentUserRole = 'viewer';
+
+        // --- Initialization ---
+
+        async function loadData() {
+            // 1. Auth Check
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            window.supabaseClient = supabase;
+            const { data: { user } } = await supabase.auth.getUser();
+            window.currentUser = user;
+            document.body.style.display = 'block';
+
+            // 2. Fetch Registry & Roles
+            const [dRoles, dRegistry] = await Promise.all([
+                fetchContent(ROLES_KEY),
+                fetchContent(REGISTRY_KEY)
+            ]);
+
+            try { rolesConfig = dRoles ? JSON.parse(dRoles) : getDefaultRoles(); } catch (e) { rolesConfig = getDefaultRoles(); }
+            try { userRegistry = dRegistry ? JSON.parse(dRegistry) : []; } catch (e) { userRegistry = []; }
+
+            // 3. Determine UI visibility
+            if (!user) {
+                console.warn('Current user data not found.');
+                return;
+            }
+            const userEntry = userRegistry.find(u => u.email && u.email.toLowerCase() === user.email.toLowerCase());
+            currentUserRole = userEntry?.role || user.user_metadata?.role || (userRegistry.length === 0 ? 'super_admin' : 'admin');
+
+            if (currentUserRole !== 'super_admin' && currentUserRole !== 'admin') {
+                const rolesTab = document.getElementById('tab-roles-link');
+                if (rolesTab) rolesTab.style.display = 'none';
+            }
+
+            // Sync current user's verification status if needed
+            const userInRegistry = userRegistry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            if (userInRegistry && !userInRegistry.isVerified && (user.confirmed_at || user.email_confirmed_at)) {
+                userInRegistry.isVerified = true;
+                await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+            }
+
+            await populatePermissionsFromSidebar();
+            renderUserList();
+            renderRolesOptions();
+            renderRolesTable();
+        }
+
+        async function populatePermissionsFromSidebar() {
+            try {
+                const response = await fetch('components/sidebar.html');
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = doc.querySelectorAll('.nav-link[id]');
+
+                const checklist = document.getElementById('permChecklist');
+                if (checklist) {
+                    checklist.innerHTML = Array.from(links).map(link => {
+                        const id = link.id;
+                        const text = link.querySelector('span').innerText;
+                        return `
+                        <div class="perm-item">
+                            <input type="checkbox" value="${id}" id="p-${id}">
+                            <label for="p-${id}">${text}</label>
+                        </div>
+                    `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Error populating permissions from sidebar:', error);
+            }
+        }
+
+        function getDefaultRoles() {
+            return {
+                'super_admin': { permissions: ['nav-dashboard', 'nav-enquiries', 'nav-bookings', 'nav-insurance', 'nav-sales', 'nav-email-config', 'nav-manage-images', 'nav-manage-booking-site', 'nav-manage-fleet', 'nav-manage-destinations', 'nav-announcements', 'nav-hr', 'nav-taxi-portal'] },
+                'admin': { permissions: ['nav-dashboard', 'nav-enquiries', 'nav-bookings', 'nav-insurance', 'nav-sales', 'nav-email-config', 'nav-manage-images', 'nav-manage-booking-site', 'nav-manage-fleet', 'nav-manage-destinations', 'nav-announcements', 'nav-taxi-portal'] },
+                'taxi_driver': { permissions: ['nav-dashboard', 'nav-taxi-portal'] },
+                'viewer': { permissions: ['nav-dashboard'] }
+            };
+        }
+
+        // --- Tabs ---
+        window.switchHRTab = (tab) => {
+            document.querySelectorAll('.hr-tab').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('hr-section-users').style.display = tab === 'users' ? 'block' : 'none';
+            document.getElementById('hr-section-roles').style.display = tab === 'roles' ? 'block' : 'none';
+        };
+
+        // --- User Management ---
+
+        window.renderUserList = async () => {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = userRegistry.map(u => `
+                <tr>
+                    <td>
+                        <div class="fw-600">${u.name || 'Staff User'}</div>
+                        <div class="small text-muted">${u.email}</div>
+                        <div class="small text-muted" style="font-size: 10px;">Created: ${u.created || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <span class="user-badge badge-${u.role === 'super_admin' ? 'super' : u.role === 'admin' ? 'admin' : 'viewer'}">
+                            ${u.role.replace('_', ' ')}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${u.status === 'suspended' ? 'bg-danger' : 'bg-success'}">
+                            ${u.status || 'Active'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${u.isVerified ? 'bg-info' : 'bg-secondary'}">
+                            <i class="fas ${u.isVerified ? 'fa-check-double' : 'fa-clock'} me-1"></i>
+                            ${u.isVerified ? 'Verified' : 'Pending'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-1">
+                            ${(currentUserRole === 'super_admin' || (currentUserRole === 'admin' && u.role !== 'super_admin')) ? `
+                                <button class="btn btn-sm btn-outline-info" onclick="openEditUserModal('${u.email}')" title="Edit User">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="resendVerificationLink('${u.email}')" title="Resend Verification">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="sendPasswordResetLink('${u.email}')" title="Send Password Reset">
+                                    <i class="fas fa-key"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="toggleUserStatus('${u.email}')" title="${u.status === 'suspended' ? 'Activate' : 'Suspend'}">
+                                    <i class="fas ${u.status === 'suspended' ? 'fa-user-check' : 'fa-user-slash'}"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="removeUser('${u.email}')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : '<span class="text-muted small">Restricted</span>'}
+                        </div>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" class="text-center py-4 text-muted">No users found in registry.</td></tr>';
+        };
+
+        window.generateUser = async () => {
+            const name = document.getElementById('newUserName').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const role = document.getElementById('newUserRole').value;
+
+            if (!name || !email) {
+                window.showAlert('Please enter both name and email', 'error');
+                return;
+            }
+
+            const confirmed = await window.showConfirm('Create User', `Are you sure you want to create an account for ${name} (${email}) as ${role}?`);
+            if (!confirmed) return;
+
+            // check if email already exists in registry
+            if (userRegistry.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                window.showAlert('User already exists in registry', 'warning');
+                return;
+            }
+
+            // Generate Random Password
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let pass = "";
+            for (let i = 0; i < 12; i++) pass += chars[Math.floor(Math.random() * chars.length)];
+
+            // Create a temporary client to sign up the user without logging out the admin
+            const tempClient = createClient(supabaseUrl, supabaseKey, {
+                auth: { persistSession: false }
+            });
+
+            window.showAlert('Creating authentication account...', 'info');
+
+            const { data: signupData, error: signupError } = await tempClient.auth.signUp({
+                email,
+                password: pass,
+                options: {
+                    data: {
+                        role: role,
+                        full_name: name
+                    }
+                }
+            });
+
+            if (signupError) {
+                window.showAlert('Auth Creation Failed: ' + signupError.message, 'error');
+                return;
+            }
+
+            // Save to registry
+            const newUser = {
+                email,
+                name,
+                role,
+                status: 'active',
+                isVerified: false,
+                created: new Date().toLocaleDateString()
+            };
+
+            userRegistry.push(newUser);
+            const res = await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+
+            if (!res.error) {
+                document.getElementById('tempPass').innerText = pass;
+                document.getElementById('tempPass').dataset.value = pass;
+                document.getElementById('generatedPassArea').style.display = 'block';
+                document.getElementById('newUserName').value = '';
+                document.getElementById('newUserEmail').value = '';
+                renderUserList();
+                window.showAlert('User created! Verification email sent.', 'success');
+            } else {
+                window.showAlert('Registry update failed: ' + res.error.message, 'error');
+            }
+        };
+
+        window.copyTempPass = () => {
+            const pass = document.getElementById('tempPass').dataset.value;
+            navigator.clipboard.writeText(pass);
+            window.showAlert('Password copied to clipboard', 'success');
+        };
+
+        window.resendVerificationLink = async (email) => {
+            const confirmed = await window.showConfirm('Resend Verification', `Send a new verification email to ${email}?`);
+            if (!confirmed) return;
+
+            const { error } = await supabase.auth.resend({
+                type: 'signup',
+                email: email
+            });
+            if (error) window.showAlert('Failed to resend hook: ' + error.message, 'error');
+            else window.showAlert('Verification link resent to ' + email, 'success');
+        };
+
+        window.sendPasswordResetLink = async (email) => {
+            const confirmed = await window.showConfirm('Reset Password', `Send a password reset link to ${email}?`);
+            if (!confirmed) return;
+
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/admin/login.html'
+            });
+            if (error) window.showAlert('Failed to send reset email: ' + error.message, 'error');
+            else window.showAlert('Password reset link sent to ' + email, 'success');
+        };
+
+        window.sendVerification = () => {
+            window.showAlert('Verification link request sent to Supabase Auth handler.', 'info');
+        };
+
+        window.toggleUserStatus = async (email) => {
+            const user = userRegistry.find(u => u.email === email);
+            if (!user) return;
+
+            const action = user.status === 'suspended' ? 'Activate' : 'Suspend';
+            const confirmed = await window.showConfirm(`${action} User`, `Are you sure you want to ${action.toLowerCase()} account for ${email}?`);
+            if (!confirmed) return;
+
+            user.status = user.status === 'suspended' ? 'active' : 'suspended';
+            await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+            renderUserList();
+            window.showAlert(`User status updated to ${user.status}`, 'success');
+        };
+
+        window.removeUser = async (email) => {
+            const confirmed = await window.showConfirm('Remove User', `Are you sure you want to remove ${email} from the admin portal? Their registry record will be deleted.`);
+            if (confirmed) {
+                userRegistry = userRegistry.filter(u => u.email !== email);
+                await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+                renderUserList();
+                window.showAlert('User removed from registry', 'success');
+            }
+        };
+
+        // --- Edit User Logic ---
+        const editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+
+        window.openEditUserModal = (email) => {
+            const user = userRegistry.find(u => u.email === email);
+            if (!user) return;
+
+            document.getElementById('editUserName').value = user.name || '';
+            document.getElementById('editUserEmail').value = user.email;
+            document.getElementById('editUserStatus').value = user.status || 'active';
+
+            // Populate Roles in Modal
+            const roleSelect = document.getElementById('editUserRole');
+            const roleList = Object.keys(rolesConfig);
+            roleSelect.innerHTML = roleList
+                .filter(r => currentUserRole === 'super_admin' || r !== 'super_admin')
+                .map(r => `<option value="${r}" ${user.role === r ? 'selected' : ''}>${r.replace('_', ' ').toUpperCase()}</option>`)
+                .join('');
+
+            editUserModal.show();
+        };
+
+        window.updateUserRegistry = async () => {
+            const email = document.getElementById('editUserEmail').value;
+            const userIndex = userRegistry.findIndex(u => u.email === email);
+            if (userIndex === -1) return;
+
+            userRegistry[userIndex].name = document.getElementById('editUserName').value.trim();
+            userRegistry[userIndex].role = document.getElementById('editUserRole').value;
+            userRegistry[userIndex].status = document.getElementById('editUserStatus').value;
+
+            const res = await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+            if (!res.error) {
+                window.showAlert('User registry updated successfully', 'success');
+                editUserModal.hide();
+                renderUserList();
+            } else {
+                window.showAlert('Failed to update registry: ' + res.error.message, 'error');
+            }
+        };
+
+        // --- Role Management ---
+
+        window.renderRolesOptions = () => {
+            const select = document.getElementById('newUserRole');
+            const roleList = Object.keys(rolesConfig);
+            select.innerHTML = roleList
+                .filter(r => currentUserRole === 'super_admin' || r !== 'super_admin') // Admin can't create super admin
+                .map(r => `<option value="${r}">${r.replace('_', ' ').toUpperCase()}</option>`)
+                .join('');
+        };
+
+        window.renderRolesTable = () => {
+            const tbody = document.getElementById('rolesConfigTable');
+            tbody.innerHTML = Object.entries(rolesConfig).map(([slug, config]) => `
+                <tr>
+                    <td><span class="fw-bold">${slug}</span></td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-1">
+                            ${config.permissions.map(p => `<span class="badge bg-light text-dark border" style="font-size:10px">${p.replace('nav-', '')}</span>`).join('')}
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editRole('${slug}')" title="Edit Role">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ${(slug !== 'super_admin' && (currentUserRole === 'super_admin' || (currentUserRole === 'admin' && slug !== 'super_admin'))) ? `
+                            <button class="btn btn-sm btn-outline-danger ms-1" onclick="deleteRole('${slug}')" title="Delete Role">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        window.deleteRole = async (slug) => {
+            if (slug === 'super_admin') {
+                window.showAlert('The Super Admin role cannot be deleted.', 'error');
+                return;
+            }
+
+            // Check if any user is currently assigned to this role
+            const usersWithRole = userRegistry.filter(u => u.role === slug);
+            if (usersWithRole.length > 0) {
+                window.showAlert(`Cannot delete role "${slug}" because it is currently assigned to ${usersWithRole.length} user(s).`, 'warning');
+                return;
+            }
+
+            const confirmed = await window.showConfirm('Delete Role', `Are you sure you want to permanently delete the role "${slug.toUpperCase()}"?`);
+            if (!confirmed) return;
+
+            delete rolesConfig[slug];
+            const res = await saveContent(ROLES_KEY, JSON.stringify(rolesConfig));
+
+            if (!res.error) {
+                window.showAlert(`Role "${slug}" has been deleted.`, 'success');
+                renderRolesOptions();
+                renderRolesTable();
+
+                // Clear the form if it was being edited
+                if (document.getElementById('newRoleSlug').value === slug) {
+                    document.getElementById('newRoleSlug').value = '';
+                    document.querySelectorAll('#permChecklist input').forEach(cb => cb.checked = false);
+                }
+            } else {
+                window.showAlert('Failed to delete role: ' + res.error.message, 'error');
+            }
+        };
+
+        window.saveRole = async () => {
+            const slug = document.getElementById('newRoleSlug').value.trim().toLowerCase().replace(/\s+/g, '_');
+            const selectedPerms = Array.from(document.querySelectorAll('#permChecklist input:checked')).map(el => el.value);
+
+            if (!slug) {
+                window.showAlert('Role slug is required', 'error');
+                return;
+            }
+
+            if (slug === 'super_admin' && currentUserRole !== 'super_admin') {
+                window.showAlert('Only a Super Admin can modify the Super Admin role.', 'error');
+                return;
+            }
+
+            rolesConfig[slug] = { permissions: selectedPerms };
+            const res = await saveContent(ROLES_KEY, JSON.stringify(rolesConfig));
+
+            if (!res.error) {
+                window.showAlert(`Role "${slug}" updated successfully`, 'success');
+                renderRolesOptions();
+                renderRolesTable();
+                document.getElementById('newRoleSlug').value = '';
+            }
+        };
+
+        window.editRole = (slug) => {
+            if (slug === 'super_admin' && currentUserRole !== 'super_admin') {
+                window.showAlert('Only a Super Admin can modify the Super Admin role.', 'error');
+                return;
+            }
+            document.getElementById('newRoleSlug').value = slug;
+            const perms = rolesConfig[slug].permissions;
+            document.querySelectorAll('#permChecklist input').forEach(cb => {
+                cb.checked = perms.includes(cb.value);
+            });
+        };
+
+        loadData();
+    </script>
+</body>
+
+</html>

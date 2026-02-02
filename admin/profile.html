@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - FLTT </title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            background: #fff;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            background: rgba(232, 96, 76, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 700;
+            border: 4px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-main-info h2 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .profile-main-info p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <div class="profile-container">
+                    <h1 class="page-title">My Profile</h1>
+
+                    <!-- Profile Header Card -->
+                    <div class="profile-header">
+                        <div class="profile-avatar-large" id="profileLargeAvatar">?</div>
+                        <div class="profile-main-info">
+                            <h2 id="displayFullName">Loading...</h2>
+                            <p id="displayEmail">...</p>
+                            <div class="mt-2">
+                                <span id="displayRoleBadge" class="badge bg-primary">...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Personal Details -->
+                        <div class="col-md-12 mb-4">
+                            <div class="content-card">
+                                <div class="section-title">
+                                    <i class="fas fa-user-circle"></i> Personal Details
+                                </div>
+                                <div class="info-grid">
+                                    <div class="mb-3">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" id="fullName" class="form-control" placeholder="Your Name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" id="email" class="form-control" readonly>
+                                        <div class="form-text">Login email cannot be changed.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Mobile Number</label>
+                                        <input type="tel" id="mobileNumber" class="form-control"
+                                            placeholder="+91 00000 00000">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Staff Role</label>
+                                        <input type="text" id="role" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <button onclick="updateProfile()" class="btn btn-custom px-4">
+                                        <i class="fas fa-save me-2"></i> Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Change Password -->
+                        <div class="col-md-12 mb-4">
+                            <div class="content-card">
+                                <div class="section-title">
+                                    <i class="fas fa-key"></i> Change Password
+                                </div>
+                                <p class="text-muted mb-4 small">Update your account password. You will be logged out
+                                    after a successful password change.</p>
+
+                                <div class="info-grid">
+                                    <div class="mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" id="newPassword" class="form-control"
+                                            placeholder="••••••••">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Confirm New Password</label>
+                                        <input type="password" id="confirmPassword" class="form-control"
+                                            placeholder="••••••••">
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button onclick="changePassword()" class="btn btn-outline-custom">
+                                        <i class="fas fa-shield-alt me-2"></i> Update Password
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/admin-announcement-checker.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase, saveContent, fetchContent } from '../assets/js/supabase-client.js';
+
+        const REGISTRY_KEY = 'admin_users_registry';
+        let currentUser = null;
+        let userRegistry = [];
+
+        async function initProfile() {
+            // 1. Auth Check
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            window.supabaseClient = supabase;
+            const { data: { user } } = await supabase.auth.getUser();
+            currentUser = user;
+            document.body.style.display = 'block';
+
+            // 2. Load Registry to get current role and details
+            const dRegistry = await fetchContent(REGISTRY_KEY);
+            try { userRegistry = dRegistry ? JSON.parse(dRegistry) : []; } catch (e) { userRegistry = []; }
+
+            const userEntry = userRegistry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            const role = userEntry?.role || user.user_metadata?.role || (userRegistry.length === 0 ? 'super_admin' : 'admin');
+            const fullName = userEntry?.name || user.user_metadata?.full_name || user.email.split('@')[0];
+            const mobile = userEntry?.mobile || user.user_metadata?.phone || '';
+
+            // 3. Populate Fields
+            document.getElementById('fullName').value = fullName;
+            document.getElementById('displayFullName').innerText = fullName.toUpperCase();
+            document.getElementById('email').value = user.email;
+            document.getElementById('displayEmail').innerText = user.email;
+            document.getElementById('mobileNumber').value = mobile;
+            document.getElementById('role').value = role.replace('_', ' ').toUpperCase();
+            document.getElementById('displayRoleBadge').innerText = role.replace('_', ' ').toUpperCase();
+
+            const avatarChar = fullName.charAt(0).toUpperCase();
+            document.getElementById('profileLargeAvatar').innerText = avatarChar;
+
+            // Also update topbar if not already handled by sidebar-loader
+            const topbarName = document.querySelector('.user-name');
+            const topbarRole = document.querySelector('.user-role');
+            const topbarAvatar = document.querySelector('.avatar');
+            if (topbarName) topbarName.innerText = fullName.toUpperCase();
+            if (topbarRole) topbarRole.innerText = role.replace('_', ' ').toUpperCase();
+            if (topbarAvatar) topbarAvatar.innerText = avatarChar;
+        }
+
+        window.updateProfile = async () => {
+            const newName = document.getElementById('fullName').value.trim();
+            const newMobile = document.getElementById('mobileNumber').value.trim();
+
+            if (!newName) {
+                window.showAlert('Name is required', 'error');
+                return;
+            }
+
+            try {
+                window.showAlert('Updating profile...', 'info');
+
+                // 1. Update Supabase Auth metadata
+                const { error: authError } = await supabase.auth.updateUser({
+                    data: {
+                        full_name: newName,
+                        phone: newMobile
+                    }
+                });
+
+                if (authError) throw authError;
+
+                // 2. Update Registry in site_content
+                const userIndex = userRegistry.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+                if (userIndex !== -1) {
+                    userRegistry[userIndex].name = newName;
+                    userRegistry[userIndex].mobile = newMobile;
+
+                    const res = await saveContent(REGISTRY_KEY, JSON.stringify(userRegistry));
+                    if (res.error) throw res.error;
+                }
+
+                window.showAlert('Profile updated successfully!', 'success');
+
+                // Refresh display
+                document.getElementById('displayFullName').innerText = newName.toUpperCase();
+                document.getElementById('profileLargeAvatar').innerText = newName.charAt(0).toUpperCase();
+
+                const topbarName = document.querySelector('.user-name');
+                const topbarAvatar = document.querySelector('.avatar');
+                if (topbarName) topbarName.innerText = newName.toUpperCase();
+                if (topbarAvatar) topbarAvatar.innerText = newName.charAt(0).toUpperCase();
+
+            } catch (error) {
+                console.error('Update failed:', error);
+                window.showAlert('Failed to update: ' + error.message, 'error');
+            }
+        };
+
+        window.changePassword = async () => {
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            if (!newPass) {
+                window.showAlert('Please enter a new password', 'error');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                window.showAlert('Passwords do not match', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                window.showAlert('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            const confirm = await window.showConfirm('Change Password', 'Are you sure you want to change your password? You will be logged out and need to sign in again.');
+
+            if (confirm) {
+                try {
+                    window.showAlert('Updating password...', 'info');
+                    const { error } = await supabase.auth.updateUser({ password: newPass });
+
+                    if (error) throw error;
+
+                    window.showAlert('Password changed! Logging out...', 'success');
+                    setTimeout(() => {
+                        window.handleLogout();
+                    }, 2000);
+
+                } catch (error) {
+                    window.showAlert('Failed to update password: ' + error.message, 'error');
+                }
+            }
+        };
+
+        initProfile();
+    </script>
+</body>
+
+</html>

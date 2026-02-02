@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Taxi & Bus Booking | Fly Light Tours and Travels </title>
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Book Taxi and Tourist Buses in Kerala with Fly Light Tours and Travels" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link data-consent-category="functional" rel="preload" as="style"
+        data-href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+            rel="stylesheet">
+    </noscript>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="assets/vendors/jetly-icons/style.css">
+    <link rel="stylesheet" href="assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="assets/vendors/nice-select/nice-select.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="assets/css/jetly.css" />
+    <link rel="stylesheet" href="assets/css/jetly-responsive.css" />
+    <link rel="stylesheet" href="assets/css/custom.css" />
+
+    <!-- GDPR Consent System -->
+    <script src="assets/js/gdpr-init.js" defer></script>
+
+    <!-- Custom Styles -->
+    <style>
+        /* General Section Styles */
+        .fleet-section {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+        }
+
+        .fleet-section.alt-bg {
+            background-color: #fff;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--jetly-black);
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Fleet Grid & Cards */
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .fleet-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            /* Added */
+        }
+
+        .fleet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .fleet-thumb {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background-color: #eee;
+            position: relative;
+        }
+
+        .fleet-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .fleet-card:hover .fleet-thumb img {
+            transform: scale(1.05);
+        }
+
+        .fleet-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .fleet-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--jetly-black);
+        }
+
+        .fleet-desc {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .fleet-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .fleet-btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-view {
+            background-color: #eef2f6;
+            color: var(--jetly-black);
+        }
+
+        .btn-view:hover {
+            background-color: #dce4eb;
+        }
+
+        .btn-book {
+            background-color: #1a7a3e;
+            color: white;
+        }
+
+        .btn-book:hover {
+            background-color: #145c2e;
+        }
+
+        /* Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content-wrapper {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            /* Reduced width */
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* View Modal Specifics */
+        .view-modal-body {
+            padding: 0;
+            overflow-y: auto;
+        }
+
+        .gallery-swiper {
+            height: 350px;
+            /* Reduced height */
+            background: #000;
+        }
+
+        .gallery-swiper .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Unified fit */
+        }
+
+        .modal-vehicle-info {
+            padding: 25px;
+            background: #fff;
+        }
+
+        .modal-vehicle-info h3 {
+            font-size: 24px;
+            /* Slightly smaller */
+            font-weight: 700;
+            margin-bottom: 2px;
+            color: var(--jetly-black);
+        }
+
+        .modal-vehicle-id {
+            font-size: 14px;
+            color: #E8604C;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .modal-vehicle-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .modal-rent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .rent-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rent-item label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .rent-item span {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .gallery-swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gallery-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .gallery-swiper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: white;
+        }
+
+        /* Booking Modal Specifics */
+        .booking-modal-wrapper {
+            max-width: 550px;
+        }
+
+        .booking-modal-body {
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .booking-header h3 {
+            font-size: 24px;
+            color: #1a7a3e;
+            font-weight: 700;
+        }
+
+        /* Form Recap from previous design */
+        .modal-form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-form-group input,
+        .modal-form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .modal-form-group input:focus {
+            border-color: #1a7a3e;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #1a7a3e;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #145c2e;
+        }
+
+        /* Success Popup */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-popup.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .success-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .btn-close-popup {
+            background: #1a7a3e;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 6px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .fleet-price-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #1a7a3e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body class="custom-cursor">
+
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+
+    <!-- Preloader removed to prevent stuck loading state -->
+
+
+    <div class="page-wrapper">
+        <header class="main-header">
+            <nav class="main-menu">
+                <div class="main-menu__wrapper">
+                    <div class="main-menu__wrapper-inner">
+                        <div class="main-menu-three__left">
+                            <div class="main-menu-three__logo">
+                                <a href="index.html">
+                                    <img id="logo1" data-img-id="IM-102" src="" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="main-menu__main-menu-box">
+                            <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                            <ul class="main-menu__list">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="about.html">About</a></li>
+                                <li class="dropdown current">
+                                    <a href="#">Services</a>
+                                    <ul class="shadow-box">
+                                        <li><a href="index.html#enquirySection">Tickets</a></li>
+                                        <li><a href="destinations.html">Destinations</a></li>
+                                        <li><a href="insur.html">Insurance</a></li>
+                                        <li><a href="#taxi-fleet">Taxi</a></li>
+                                        <li><a href="#bus-fleet">Bus</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="faq.html">FAQ</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="main-menu__right">
+                            <div class="main-menu__search-cart-call-box">
+                                <div class="main-menu__call">
+                                    <div class="main-menu__call-icon"><i class="fas fa-phone"></i></div>
+                                    <div class="main-menu__call-content">
+                                        <p class="main-menu__call-sub-title">Call Anytime</p>
+                                        <h5 class="main-menu__call-number"><a href="tel:+918129566053">+91 81295 66053
+                                            </a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!--Page Header Start-->
+        <section class="page-header">
+            <div id="page-header-bg" class="page-header-bg" data-img="IM-138"></div>
+            <div class="container">
+                <div class="page-header__inner">
+                    <h2>Taxi & Bus Booking</h2>
+                    <ul class="thm-breadcrumb list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><span>/</span></li>
+                        <li>Travel</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!-- BIKE & AUTO SECTION -->
+        <section id="micro-fleet" class="fleet-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Bike & Auto Services</h2>
+                    <p>Quick and affordable rides for city travel and short distances</p>
+                </div>
+                <!-- Micro Grid -->
+                <div class="fleet-grid" id="microGrid">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAXI FLEET SECTION -->
+        <section id="taxi-fleet" class="fleet-section alt-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Premium Taxi Fleet</h2>
+                    <p>Choose from our wide range of comfortable sanitised cars for your journey</p>
+                </div>
+                <!-- Taxi Grid -->
+                <div class="fleet-grid" id="taxiGrid">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TRAVELLER & MINI BUS SECTION -->
+        <section id="traveller-fleet" class="fleet-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Traveller & Mini Bus</h2>
+                    <p>Perfect for group tours, family outings and airport transfers</p>
+                </div>
+                <div class="fleet-grid" id="travellerGrid">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- BUS FLEET SECTION -->
+        <section id="bus-fleet" class="fleet-section alt-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Kerala Tourist Bus Collection</h2>
+                    <p>Luxury tourist buses for wedding, tour packages and family trips</p>
+                </div>
+                <!-- Bus Grid -->
+                <div class="fleet-grid" id="busGrid">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW DETAILS MODAL -->
+        <div id="viewModal" class="custom-modal">
+            <div class="modal-content-wrapper">
+                <div class="modal-close" id="closeViewModal"><i class="fas fa-times"></i></div>
+                <div class="view-modal-body">
+                    <!-- Swiper -->
+                    <div class="swiper-container gallery-swiper">
+                        <div class="swiper-wrapper" id="galleryWrapper">
+                            <!-- Slides injected via JS -->
+                        </div>
+                        <!-- Add Arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+
+                    <!-- Vehicle Details -->
+                    <div class="modal-vehicle-info" id="modalVehicleInfo">
+                        <h3 id="modalVName">Vehicle Name</h3>
+                        <span class="modal-vehicle-id" id="modalVId">KL-00-XX-0000</span>
+                        <p class="modal-vehicle-desc" id="modalVDesc">Vehicle description goes here...</p>
+
+                        <div class="modal-rent-grid" id="modalRentGrid">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <div class="p-3 text-center">
+                        <button class="fleet-btn btn-book w-100" id="modalBookBtn">Book This Vehicle Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKING FORM MODAL -->
+        <div id="bookingModal" class="custom-modal">
+            <div class="modal-content-wrapper booking-modal-wrapper">
+                <div class="modal-close" id="closeBookingModal"><i class="fas fa-times"></i></div>
+                <div class="booking-modal-body">
+                    <div class="booking-header">
+                        <h3 id="bookingTitle">Book Your Ride</h3>
+                        <p>Fill in the details below</p>
+                    </div>
+
+                    <form id="fleetBookingForm"
+                        action="https://script.google.com/macros/s/AKfycbzksVGxSQREfjSMihFOsjnTph_xrfMUFm8RScXkngZOdU78e3UoH5TuR1KyTTI_K1HN/exec"
+                        method="POST">
+                        <input type="hidden" name="vehicle_type" id="vehicleTypeInput">
+                        <input type="hidden" name="vehicle_id" id="vehicleIdInput">
+
+                        <div class="modal-form-group">
+                            <label>Full Name *</label>
+                            <input type="text" name="name" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="modal-form-group">
+                                    <label>From *</label>
+                                    <input type="text" name="from" required placeholder="Pickup Location">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-form-group">
+                                    <label>To *</label>
+                                    <input type="text" name="to" required placeholder="Drop Location">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="modal-form-group">
+                                    <label>Journey Date *</label>
+                                    <input type="date" name="journey_date" id="journeyDateBg" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-form-group">
+                                    <label>Return Date (Optional)</label>
+                                    <input type="date" name="return_date" id="returnDateBg">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-form-group">
+                            <label>Email (Optional)</label>
+                            <input type="email" name="email" placeholder="for booking receipt">
+                        </div>
+
+                        <div class="modal-form-group">
+                            <label>WhatsApp Number *</label>
+                            <input type="tel" name="whatsapp_number" required placeholder="+91 xxxxxxxxxx"
+                                pattern="[+]?[0-9]{10,15}">
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="finalSubmitBtn">Confirm Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Popup -->
+        <div class="success-popup" id="successPopup">
+            <div class="success-icon">✅</div>
+            <h3>Booking Received!</h3>
+            <p>We will contact you shortly on WhatsApp to confirm.</p>
+            <button class="btn-close-popup" id="closeSuccessPopup">Close</button>
+        </div>
+
+
+        <!--Site Footer Start-->
+        <footer class="site-footer">
+            <div class="container">
+                <div class="site-footer__inner">
+                    <div class="site-footer__shape-1 zoom-fade-3">
+                        <img src="assets/images/shapes/site-footer-shape-1.png" alt="">
+                    </div>
+                    <div class="site-footer__top">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                                <div class="footer-widget__column footer-widget__about">
+                                    <div class="footer-widget__logo">
+                                        <a href="index.html">
+                                            <img data-img-id="IM-122" src="" alt="">
+                                        </a>
+                                    </div>
+
+                                    <div class="footer-widget__about-text-box">
+                                        <p class="footer-widget__about-text">Your journey begins with us – booking
+                                            flights made easy.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                                <div class="footer-widget__column footer-widget__Explore">
+                                    <div class="footer-widget__title-box">
+                                        <h3 class="footer-widget__title">Explore</h3>
+                                    </div>
+                                    <ul class="footer-widget__Explore-list list-unstyled">
+                                        <li><a href="about.html">About</a></li>
+                                        <li><a href="404.html">Book Flight</a></li>
+                                        <li><a href="404.html">Book Room</a></li>
+                                        <li><a href="404.html">Insurance</a></li>
+                                        <li><a href="taxi.html">Book Taxi / Bus</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                                <div class="footer-widget__column footer-widget__links">
+                                    <div class="footer-widget__title-box">
+                                        <h3 class="footer-widget__title">Links</h3>
+                                    </div>
+                                    <ul class="footer-widget__Explore-list list-unstyled">
+                                        <li><a href="terms-of-use.html">Terms of Use</a></li>
+                                        <li><a href="contact.html">Contact</a></li>
+                                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                                        <li><a href="javascript:void(0)" onclick="GDPR.showSettings()">Manage
+                                                Cookies</a></li>
+                                        <li><a href="faq.html">FAQs</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
+                                <div class="footer-widget__column footer-widget__Contact">
+                                    <div class="footer-widget__title-box">
+                                        <h3 class="footer-widget__title">Contact</h3>
+                                    </div>
+                                    <ul class="footer-widget__Contact-list list-unstyled">
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fas fa-phone"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p><a href="tel:+9288006780">+91 81295 66053</a></p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fas fa-envelope"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p><a
+                                                        href="mailto:help@flylighttoursandtravels.com">help@flylighttoursandtravels.com</a>
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fas fa-map-marker"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p>Fly Light Tours and Travels, Gridify, SSV College Jn, Perumbavoor,
+                                                    Ernakulam, Kerala</p>
+
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="site-footer__bottom">
+                        <div class="site-footer__bottom-inner">
+                            <div class="site-footer__bottom-left">
+                                <p class="site-footer__bottom-text">
+                                    © Copyright 2026 Fly Light Tours and Travels. All Rights Reserved.
+                                </p>
+                                <p class="site-footer__bottom-text2">
+                                    <a href="https://www.gridify.in" target="_blank">Powered by GRIDIFY</a>
+                                </p>
+                            </div>
+
+                            <div class="site-footer__bottom-right">
+                                <div class="site-footer__social">
+                                    <a href="www.x.com"><i class="fab fa-twitter"></i></a>
+                                    <a
+                                        href="https://wa.me/918129566053?text=Hy%20Fly%20Light%2C%20I%20have%20an%20enquiry%2E%2E%2E%21"><i
+                                            class="fab fa-whatsapp"></i></a>
+                                    <a href="https://www.instagram.com/fly_light_tours_and_travels/"><i
+                                            class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Site Footer End-->
+
+    </div><!-- /.page-wrapper -->
+
+    <!-- Mobile Nav Wrapper (Standard) -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="index.html"><img src="assets/images/resources/logo-2.png" width="143" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+        </div>
+    </div>
+
+
+    <script src="assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="assets/vendors/swiper/swiper.min.js"></script>
+    <script src="assets/vendors/nice-select/jquery.nice-select.min.js"></script>
+    <script src="assets/vendors/wow/wow.js"></script>
+    <script src="assets/js/jetly.js"></script>
+    <!-- Global Site Loader -->
+    <script type="module">
+        import { applySiteAssets } from './assets/js/assets-loader.js';
+        import { initEnquiryForm } from './assets/js/enquiry-handler.js';
+        applySiteAssets();
+        initEnquiryForm('fleetBookingForm', {
+            type: 'fleet',
+            nameField: 'name',
+            phoneField: 'whatsapp_number',
+            serviceField: 'vehicle_type'
+        });
+    </script>
+
+    <!-- Main Script for Fleet Management -->
+    <script type="module">
+        import { supabase, fetchContent } from './assets/js/supabase-client.js';
+
+        // Make globalData accessible globally or pass it
+        let globalData = {};
+        let gallerySwiper = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // DEFAULTS
+            const defaultTaxiFleet = [
+                {
+                    id: 'taxi_1',
+                    name: 'Premium Sedan',
+                    desc: 'Comfortable sedan for small families and business trips. AC, Music System, Boot Space.',
+                    thumbKey: 'IM-160',
+                    photoKeys: ['IM-161', 'IM-162', 'IM-163', 'IM-164', 'IM-165'],
+                    videoKeys: []
+                },
+                {
+                    id: 'taxi_2',
+                    name: 'Luxury SUV',
+                    desc: 'Spacious SUV for long journeys and extra luggage. Premium comfort.',
+                    thumbKey: 'IM-170',
+                    photoKeys: ['IM-171', 'IM-172', 'IM-173', 'IM-174', 'IM-175'],
+                    videoKeys: []
+                },
+                {
+                    id: 'taxi_3',
+                    name: 'Family MPV (Innova)',
+                    desc: 'Perfect for family vacations. 7 Seater with ample space and AC.',
+                    thumbKey: 'IM-190',
+                    photoKeys: ['IM-191', 'IM-192', 'IM-193', 'IM-194', 'IM-195'],
+                    videoKeys: []
+                }
+            ];
+
+            const defaultBusFleet = [
+                {
+                    id: 'bus_1',
+                    name: 'Kerala Tourist Bus (49 Seater)',
+                    desc: 'Fully equipped tourist bus with LED TV, DJ System, Air Suspension and Charging Points.',
+                    thumbKey: 'IM-180',
+                    photoKeys: ['IM-181', 'IM-182', 'IM-183', 'IM-184', 'IM-185'],
+                    videoKeys: ['IM-186', 'IM-187', 'IM-188']
+                },
+                {
+                    id: 'bus_2',
+                    name: 'Urban Traveller (26 Seater)',
+                    desc: 'Compact bus for group outings. Comfortable push-back seats and sound system.',
+                    thumbKey: 'IM-200',
+                    photoKeys: ['IM-201', 'IM-202', 'IM-203', 'IM-204', 'IM-205'],
+                    videoKeys: ['IM-206', 'IM-207', 'IM-208']
+                }
+            ];
+
+            const FLEET_KEY = 'admin_fleet_config_json';
+            let taxiFleetConfig = [];
+            let busFleetConfig = [];
+            let travellerFleetConfig = [];
+            let microFleetConfig = [];
+
+            // Load Fleet Config from DB
+            const [dbFleetData, dynamicVehiclesRes] = await Promise.all([
+                fetchContent(FLEET_KEY),
+                supabase.from('taxi_vehicles').select('*').eq('is_enabled', true).eq('is_approved', true)
+            ]);
+
+            // 1. Process Global Fleet
+            if (dbFleetData) {
+                try {
+                    const allFleet = JSON.parse(dbFleetData);
+                    taxiFleetConfig = allFleet.filter(i => i.category === 'taxi' && i.enabled !== false);
+                    busFleetConfig = allFleet.filter(i => i.category === 'bus' && i.enabled !== false);
+                    travellerFleetConfig = allFleet.filter(i => ['traveller', 'mini_bus'].includes(i.category) && i.enabled !== false);
+                    microFleetConfig = allFleet.filter(i => ['bike', 'auto'].includes(i.category) && i.enabled !== false);
+                } catch (e) {
+                    console.error("Failed to parse fleet config:", e);
+                    taxiFleetConfig = defaultTaxiFleet;
+                    busFleetConfig = defaultBusFleet;
+                }
+            } else {
+                taxiFleetConfig = defaultTaxiFleet;
+                busFleetConfig = defaultBusFleet;
+            }
+
+            // 2. Process Dynamic Driver Vehicles
+            if (dynamicVehiclesRes.data) {
+                dynamicVehiclesRes.data.forEach(v => {
+                    const mapped = {
+                        id: v.vehicle_num,
+                        vehicle_num: v.vehicle_num,
+                        name: v.name,
+                        category: v.category,
+                        price: `₹${v.min_charge} Min.`,
+                        desc: v.details?.description || `${v.name} - Rate: ₹${v.charge_per_km}/km, Wait: ₹${v.waiting_charge_per_hour}/hr, Bata: ₹${v.bata}`,
+                        thumb_url: v.thumb_url,
+                        thumbKey: v.thumb_url, // For backward compatibility in template
+                        photoKeys: v.details?.photo_urls || [v.thumb_url],
+                        videoKeys: [],
+                        isDynamic: true,
+                        rates: {
+                            min: v.min_charge,
+                            km: v.charge_per_km,
+                            wait: v.waiting_charge_per_hour,
+                            bata: v.bata
+                        }
+                    };
+                    if (v.category === 'bus') busFleetConfig.push(mapped);
+                    else if (['traveller', 'mini_bus'].includes(v.category)) travellerFleetConfig.push(mapped);
+                    else if (['bike', 'auto'].includes(v.category)) microFleetConfig.push(mapped);
+                    else taxiFleetConfig.push(mapped);
+                });
+            } else if (dynamicVehiclesRes.error) {
+                console.error("Error fetching dynamic vehicles:", dynamicVehiclesRes.error);
+            }
+
+            // Load Data (Images)
+            try {
+                const res = await fetch('assets/data/data.json');
+                globalData = await res.json();
+            } catch (err) {
+                console.error("Error loading data:", err);
+            }
+
+            renderFleet(taxiFleetConfig, 'taxiGrid');
+            renderFleet(busFleetConfig, 'busGrid');
+            renderFleet(travellerFleetConfig, 'travellerGrid');
+            renderFleet(microFleetConfig, 'microGrid');
+
+            // Hide sections if empty
+            if (travellerFleetConfig.length === 0) {
+                const sec = document.getElementById('traveller-fleet');
+                if (sec) sec.style.display = 'none';
+            }
+            if (microFleetConfig.length === 0) {
+                const sec = document.getElementById('micro-fleet');
+                if (sec) sec.style.display = 'none';
+            }
+
+
+            // Function to render cards
+            function renderFleet(config, containerId) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+
+                config.forEach(item => {
+                    const itemId = item.vehicle_num || item.id;
+                    // Use thumb_url if it exists (dynamic vehicles) or if it starts with http
+                    const thumbUrl = (item.thumb_url || item.thumbKey || '').startsWith('http')
+                        ? (item.thumb_url || item.thumbKey)
+                        : (globalData[item.thumbKey] || '');
+
+                    const card = document.createElement('div');
+                    card.className = 'fleet-card';
+                    card.onclick = (e) => {
+                        // If user clicked the book button, don't open view modal
+                        if (e.target.closest('.btn-book')) return;
+                        openViewModal(itemId);
+                    };
+                    card.innerHTML = `
+                        <div class="fleet-thumb">
+                            <img src="${thumbUrl}" alt="${item.name}" onerror="this.src='assets/images/resources/logo-1.png'">
+                            ${item.price ? `<div class="fleet-price-badge">${item.price}</div>` : ''}
+                        </div>
+                        <div class="fleet-content">
+                            <h3 class="fleet-title">${item.name}</h3>
+                            <p class="fleet-desc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.desc}</p>
+                            <div class="fleet-actions">
+                                <button class="fleet-btn btn-view">View Details</button>
+                                <button class="fleet-btn btn-book" onclick="event.stopPropagation(); openBookingModal('${item.name}', '${itemId}')">Book Now</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // Expose functions to window
+            window.openViewModal = function (itemId) {
+                const item = [...taxiFleetConfig, ...busFleetConfig, ...travellerFleetConfig, ...microFleetConfig].find(i => (i.vehicle_num === itemId || i.id === itemId));
+                if (!item) {
+                    console.error("Item not found:", itemId);
+                    return;
+                }
+
+                const wrapper = document.getElementById('galleryWrapper');
+                wrapper.innerHTML = '';
+                let hasContent = false;
+
+                const photoKeys = Array.isArray(item.photoKeys) ? item.photoKeys : (item.photoKeys ? item.photoKeys.split(',').map(k => k.trim()) : []);
+                const videoKeys = Array.isArray(item.videoKeys) ? item.videoKeys : (item.videoKeys ? item.videoKeys.split(',').map(k => k.trim()) : []);
+
+                // If dynamic vehicle and has thumb_url, add it to gallery if not present
+                if (item.isDynamic && item.thumb_url && !photoKeys.includes(item.thumb_url)) {
+                    photoKeys.unshift(item.thumb_url);
+                }
+
+                // Add Photos
+                photoKeys.forEach(key => {
+                    if (!key) return;
+                    const url = key.startsWith('http') ? key : (globalData[key] || '');
+                    if (url) {
+                        hasContent = true;
+                        const slide = document.createElement('div');
+                        slide.className = 'swiper-slide';
+                        slide.innerHTML = `<img src="${url}" alt="Gallery Image" onerror="this.src='assets/images/resources/logo-1.png'">`;
+                        wrapper.appendChild(slide);
+                    }
+                });
+
+                // Add Videos (YouTube)
+                videoKeys.forEach(key => {
+                    if (!key) return;
+                    const rawUrl = key.startsWith('http') ? key : (globalData[key] || '');
+                    if (rawUrl) {
+                        const videoId = getYoutubeId(rawUrl);
+                        if (videoId) {
+                            hasContent = true;
+                            const slide = document.createElement('div');
+                            slide.className = 'swiper-slide';
+
+                            if (window.GDPR && window.GDPR.consent && window.GDPR.consent.marketing) {
+                                slide.innerHTML = `
+                                    <iframe src="https://www.youtube.com/embed/${videoId}?enablejsapi=1" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen style="width:100%; height:100%; border:none;">
+                                    </iframe>`;
+                            } else {
+                                slide.innerHTML = `
+                                    <div class="consent-placeholder" style="background:#111; color:white; padding: 40px; text-align:center;">
+                                        <p>YouTube video is blocked. Please accept <b>marketing</b> cookies to view it.</p>
+                                        <button class="btn btn-sm btn-outline-light" onclick="GDPR.showSettings()">Manage Cookies</button>
+                                    </div>`;
+                            }
+                            wrapper.appendChild(slide);
+                        }
+                    }
+                });
+
+                if (!hasContent) {
+                    wrapper.innerHTML = '<div class="swiper-slide"><div style="color:white; text-align:center; padding:50px;">No media available for this vehicle.</div></div>';
+                }
+
+                // Populate Details
+                document.getElementById('modalVName').textContent = item.name;
+                document.getElementById('modalVId').textContent = item.vehicle_num || 'Global Fleet';
+                document.getElementById('modalVDesc').textContent = item.desc;
+
+                const rentGrid = document.getElementById('modalRentGrid');
+                rentGrid.innerHTML = '';
+
+                if (item.rates) {
+                    const rates = [
+                        { label: 'Min. Charge', value: `₹${item.rates.min}` },
+                        { label: 'Per KM', value: `₹${item.rates.km}` },
+                        { label: 'Wait/hr', value: `₹${item.rates.wait}` },
+                        { label: 'Bata', value: `₹${item.rates.bata}` }
+                    ];
+
+                    rates.forEach(r => {
+                        const div = document.createElement('div');
+                        div.className = 'rent-item';
+                        div.innerHTML = `<label>${r.label}</label><span>${r.value}</span>`;
+                        rentGrid.innerHTML += div.outerHTML;
+                    });
+                    document.getElementById('modalVehicleInfo').style.display = 'block';
+                } else {
+                    document.getElementById('modalVehicleInfo').style.display = 'block';
+                    // Optional: hide rent grid if no rates (global fleet cases)
+                    rentGrid.innerHTML = '<div class="text-muted small">Standard rates apply. View during booking.</div>';
+                }
+
+                document.getElementById('modalBookBtn').onclick = () => {
+                    document.getElementById('viewModal').classList.remove('active');
+                    openBookingModal(item.name, item.vehicle_num || item.id);
+                };
+
+                const modal = document.getElementById('viewModal');
+                modal.classList.add('active');
+
+                // Initialize/Update Swiper
+                if (gallerySwiper) gallerySwiper.destroy(true, true);
+
+                setTimeout(() => {
+                    gallerySwiper = new Swiper('.gallery-swiper', {
+                        slidesPerView: 1,
+                        loop: hasContent && (photoKeys.length + videoKeys.length > 1),
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true
+                        },
+                        observer: true,
+                        observeParents: true
+                    });
+                }, 100);
+            };
+
+            window.openBookingModal = function (vehicleName, vehicleId = '') {
+                const modal = document.getElementById('bookingModal');
+                const title = document.getElementById('bookingTitle');
+                const typeInput = document.getElementById('vehicleTypeInput');
+                const idInput = document.getElementById('vehicleIdInput');
+
+                title.textContent = "Book: " + vehicleName;
+                typeInput.value = vehicleName;
+                idInput.value = vehicleId;
+
+                modal.classList.add('active');
+            };
+
+            // Modal Closes
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    this.closest('.custom-modal').classList.remove('active');
+                    if (gallerySwiper) {
+                        // Stop videos if playing
+                        const wrapper = document.getElementById('galleryWrapper');
+                        wrapper.innerHTML = '';
+                    }
+                });
+            });
+
+            // Close on click outside
+            document.querySelectorAll('.custom-modal').forEach(modal => {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        if (this.id === 'viewModal') {
+                            document.getElementById('galleryWrapper').innerHTML = '';
+                        }
+                    }
+                });
+            });
+
+            // Form Submit
+            const form = document.getElementById('fleetBookingForm');
+            const submitBtn = document.getElementById('finalSubmitBtn');
+            const successPopup = document.getElementById('successPopup');
+
+            // Date constraints
+            const today = new Date().toISOString().split("T")[0];
+            const journeyDateEl = document.getElementById('journeyDateBg');
+            const returnDateEl = document.getElementById('returnDateBg');
+            if (journeyDateEl) journeyDateEl.setAttribute('min', today);
+            if (returnDateEl) returnDateEl.setAttribute('min', today);
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Processing...";
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                }).then(() => {
+                    // Close booking modal
+                    document.getElementById('bookingModal').classList.remove('active');
+                    form.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Confirm Booking";
+
+                    // Show Success
+                    successPopup.classList.add('active');
+                }).catch(err => {
+                    console.error(err);
+                    document.getElementById('bookingModal').classList.remove('active');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Confirm Booking";
+                    // Show Success (assuming no-cors success)
+                    successPopup.classList.add('active');
+                });
+            });
+
+            document.getElementById('closeSuccessPopup').addEventListener('click', () => {
+                successPopup.classList.remove('active');
+            });
+
+            // Helper
+            function getYoutubeId(url) {
+                if (!url) return null;
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : null;
+            }
+
+        });
+    </script>
+</body>
+
+
+</html>

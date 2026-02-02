@@ -1,0 +1,288 @@
+/* Custom Footer Centering */
+.site-footer {
+    text-align: center;
+}
+
+.site-footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.site-footer__inner {
+    width: 100%;
+}
+
+.site-footer .row {
+    justify-content: center;
+    text-align: center;
+}
+
+.site-footer .footer-widget__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.site-footer .footer-widget__logo {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.site-footer .footer-widget__about-text {
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+/* Remove large left margins that offset centering */
+.site-footer .footer-widget__Explore,
+.site-footer .footer-widget__links,
+.site-footer .footer-widget__Contact {
+    margin-left: 0 !important;
+}
+
+.site-footer .footer-widget__title-box {
+    width: 100%;
+    text-align: center;
+}
+
+.site-footer .footer-widget__Explore-list,
+.site-footer .footer-widget__Contact-list {
+    width: 100%;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.site-footer .footer-widget__Contact-list li {
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.site-footer .footer-widget__Contact-list li .icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Footer Bottom Centering */
+.site-footer__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px 0;
+    width: 100%;
+}
+
+.site-footer__bottom-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.site-footer__bottom-left,
+.site-footer__bottom-right {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.site-footer__social {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.site-footer__social a {
+    margin: 0 !important;
+}
+
+.site-footer .footer-widget__about {
+    margin-top: 0;
+}
+
+/* Service Ad Cards */
+.services-ad-section {
+    position: relative;
+    padding: 60px 0;
+    margin-top: 20px;
+    z-index: 10;
+}
+
+.service-ad-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+.service-ad-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-ad-img {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.service-ad-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.service-ad-card:hover .service-ad-img img {
+    transform: scale(1.1);
+}
+
+.service-ad-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.service-ad-card:hover .service-ad-overlay {
+    opacity: 1;
+}
+
+.service-ad-link {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4CAF50;
+    /* Fallback green */
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.service-ad-link:hover {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.service-ad-content {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.service-ad-content h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.service-ad-content h3 a {
+    color: #333;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.service-ad-content h3 a:hover {
+    color: #4CAF50;
+}
+
+/* --- Mobile Sticky Header Support --- */
+@media (max-width: 1199px) {
+
+    /* Create a specific context for sticky header on mobile */
+    .stricky-header {
+        display: none !important;
+        /* Hidden by default */
+    }
+
+    /* When the JS adds this class, show it */
+    .stricky-header.stricky-fixed {
+        display: block !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9991;
+        /* High z-index */
+        background-color: #ffffff;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        padding: 0;
+        animation: slideDownCustom 0.5s ease forwards;
+    }
+
+    .stricky-header.stricky-fixed .sticky-header__content {
+        display: block;
+    }
+
+    .stricky-header.stricky-fixed .main-menu__wrapper {
+        padding: 5px 20px;
+        background: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stricky-header.stricky-fixed .main-menu__wrapper-inner {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Adjust Logo */
+    .stricky-header.stricky-fixed .main-menu__logo {
+        padding: 0;
+        margin: 0;
+    }
+
+    .stricky-header.stricky-fixed .main-menu__logo img {
+        height: 35px;
+        /* Limit logo height */
+        width: auto;
+    }
+
+    /* Show Mobile Toggler */
+    .stricky-header.stricky-fixed .mobile-nav__toggler {
+        display: block !important;
+        font-size: 24px;
+        color: var(--jetly-black);
+        margin-left: auto;
+    }
+
+    /* Hide Desktop Elements */
+    .stricky-header.stricky-fixed .main-menu__list,
+    .stricky-header.stricky-fixed .main-menu__right,
+    .stricky-header.stricky-fixed .main-menu__top {
+        display: none !important;
+    }
+}
+
+@keyframes slideDownCustom {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

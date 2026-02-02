@@ -1,0 +1,226 @@
+/* GDPR Consent Banner Styles */
+.gdpr-banner {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    z-index: 99999;
+    translate: 0 200%;
+    transition: translate 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (min-width: 768px) {
+    .gdpr-banner {
+        bottom: 2rem;
+        left: unset;
+        right: 2rem;
+        width: 400px;
+    }
+}
+
+.gdpr-banner.active {
+    translate: 0 0;
+}
+
+.gdpr-banner h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.gdpr-banner p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #4a4a4a;
+    margin-bottom: 1.25rem;
+}
+
+.gdpr-banner p a {
+    color: #1a7a3e;
+    text-decoration: underline;
+}
+
+.gdpr-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.gdpr-btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    flex: 1;
+}
+
+.gdpr-btn-accept {
+    background: #1a7a3e;
+    color: white;
+}
+
+.gdpr-btn-accept:hover {
+    background: #145c2e;
+}
+
+.gdpr-btn-reject {
+    background: #e0e0e0;
+    color: #4a4a4a;
+}
+
+.gdpr-btn-reject:hover {
+    background: #d0d0d0;
+}
+
+.gdpr-btn-settings {
+    background: transparent;
+    color: #666;
+    text-decoration: underline;
+    font-size: 0.8rem;
+    flex: none;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+/* Settings Modal */
+.gdpr-settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.gdpr-settings-overlay.active {
+    display: flex;
+}
+
+.gdpr-settings-modal {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.gdpr-settings-modal h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.gdpr-category {
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gdpr-cat-info h4 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.gdpr-cat-info p {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Toggle Switch */
+.gdpr-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.gdpr-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.gdpr-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.gdpr-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.gdpr-slider {
+    background-color: #1a7a3e;
+}
+
+input:checked+.gdpr-slider:before {
+    transform: translateX(20px);
+}
+
+input:disabled+.gdpr-slider {
+    background-color: #efefef;
+    cursor: not-allowed;
+}
+
+/* Placeholder for blocked content */
+.consent-placeholder {
+    background: #f4f4f4;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    min-height: 200px;
+    margin: 1rem 0;
+}
+
+.consent-placeholder p {
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.consent-placeholder .thm-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}

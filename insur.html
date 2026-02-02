@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Fly Light - Popular Routes </title>
+  <!-- favicons Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png" />
+  <link rel="manifest" href="assets/images/favicons/site.webmanifest" />
+  <meta name="description" content="Jetly HTML 5 Template " />
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link data-consent-category="functional" rel="preload" as="style"
+    data-href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+      rel="stylesheet">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/vendors/animate/animate.min.css" />
+  <link rel="stylesheet" href="assets/vendors/animate/custom-animate.css" />
+  <link rel="stylesheet" href="assets/vendors/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="assets/vendors/jarallax/jarallax.css" />
+  <link rel="stylesheet" href="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+  <link rel="stylesheet" href="assets/vendors/nouislider/nouislider.min.css" />
+  <link rel="stylesheet" href="assets/vendors/nouislider/nouislider.pips.css" />
+  <link rel="stylesheet" href="assets/vendors/odometer/odometer.min.css" />
+  <link rel="stylesheet" href="assets/vendors/swiper/swiper.min.css" />
+  <link rel="stylesheet" href="assets/vendors/jetly-icons/style.css">
+  <link rel="stylesheet" href="assets/vendors/tiny-slider/tiny-slider.min.css" />
+  <link rel="stylesheet" href="assets/vendors/reey-font/stylesheet.css" />
+  <link rel="stylesheet" href="assets/vendors/owl-carousel/owl.carousel.min.css" />
+  <link rel="stylesheet" href="assets/vendors/owl-carousel/owl.theme.default.min.css" />
+  <link rel="stylesheet" href="assets/vendors/bxslider/jquery.bxslider.css" />
+  <link rel="stylesheet" href="assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+  <link rel="stylesheet" href="assets/vendors/vegas/vegas.min.css" />
+  <link rel="stylesheet" href="assets/vendors/jquery-ui/jquery-ui.css" />
+  <link rel="stylesheet" href="assets/vendors/timepicker/timePicker.css" />
+  <link rel="stylesheet" href="assets/vendors/nice-select/nice-select.css" />
+
+  <!-- template styles -->
+  <link rel="stylesheet" href="assets/css/jetly.css" />
+  <link rel="stylesheet" href="assets/css/jetly-responsive.css" />
+  <link rel="stylesheet" href="assets/css/custom.css" />
+
+  <!-- GDPR Consent System -->
+  <script src="assets/js/gdpr-init.js" defer></script>
+
+  <!-- Embedded addon CSS, scoped under .insurance-section to avoid conflicts -->
+  <style>
+    /* Scoped insurance form styles */
+    .insurance-section * {
+      box-sizing: border-box;
+    }
+
+    .insurance-section .app-container {
+      width: 100%;
+      background: #ffffff;
+    }
+
+    .insurance-section .header {
+      background: linear-gradient(135deg, #1df5e6 0%, #1df5e6 100%);
+      color: #02323e;
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .insurance-section .header h1 {
+      font-size: 36px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .insurance-section .header p {
+      font-size: 18px;
+      opacity: 0.95;
+    }
+
+    .insurance-section .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .insurance-section .button-group {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .insurance-section .action-button {
+      padding: 16px 48px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .insurance-section .buy-policy-btn {
+      background: #10b981;
+      color: #ffffff;
+    }
+
+    .insurance-section .raise-claim-btn {
+      background: #0ea5e9;
+      color: #ffffff;
+    }
+
+    .insurance-section .form-container {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      display: none;
+    }
+
+    .insurance-section .form-container.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .insurance-section .form-title {
+      font-size: 28px;
+      color: #1e293b;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .insurance-section .form-section {
+      margin-bottom: 32px;
+    }
+
+    .insurance-section .section-title {
+      font-size: 20px;
+      color: #334155;
+      margin-bottom: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insurance-section .form-group {
+      margin-bottom: 20px;
+    }
+
+    .insurance-section .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #475569;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .insurance-section .form-group input[type="text"],
+    .insurance-section .form-group input[type="email"],
+    .insurance-section .form-group input[type="tel"],
+    .insurance-section .form-group input[type="date"],
+    .insurance-section .form-group input[type="number"],
+    .insurance-section .form-group select,
+    .insurance-section .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+      background: #ffffff;
+    }
+
+    .insurance-section .form-group input:focus,
+    .insurance-section .form-group select:focus,
+    .insurance-section .form-group textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .insurance-section .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .insurance-section .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .insurance-section .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .insurance-section .radio-option:hover {
+      border-color: #3b82f6;
+      background: #f1f5f9;
+    }
+
+    .insurance-section .radio-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .insurance-section .radio-option label {
+      margin: 0;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .insurance-section .conditional-section {
+      display: none;
+      margin-top: 24px;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .insurance-section .conditional-section.active {
+      display: block;
+    }
+
+    .insurance-section .number-input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .insurance-section .submit-button {
+      background: #3b82f6;
+      color: #ffffff;
+      padding: 16px 48px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+      width: 100%;
+      margin-top: 24px;
+    }
+
+    .insurance-section .submit-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .insurance-section .submit-button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .insurance-section .back-button {
+      background: #64748b;
+      color: #ffffff;
+      padding: 12px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .insurance-section .back-button:hover {
+      background: #475569;
+    }
+
+    .insurance-section .required {
+      color: #ef4444;
+    }
+
+    .insurance-section .success-notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      transition: transform 0.3s ease;
+    }
+
+    .insurance-section .success-notification.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .insurance-section .success-notification .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .insurance-section .success-notification h3 {
+      font-size: 28px;
+      color: #10b981;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .insurance-section .success-notification p {
+      font-size: 18px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .insurance-section .success-notification button {
+      background: #10b981;
+      color: #ffffff;
+      padding: 12px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .insurance-section .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    .insurance-section .overlay.show {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .insurance-section .header h1 {
+        font-size: 28px;
+      }
+
+      .insurance-section .header p {
+        font-size: 16px;
+      }
+
+      .insurance-section .button-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .insurance-section .form-container {
+        padding: 24px;
+      }
+
+      .insurance-section .form-title {
+        font-size: 24px;
+      }
+
+      .insurance-section .section-title {
+        font-size: 18px;
+      }
+
+      .insurance-section .success-notification {
+        padding: 30px 20px;
+      }
+
+      .insurance-section .success-notification h3 {
+        font-size: 24px;
+      }
+
+      .insurance-section .success-notification p {
+        font-size: 16px;
+      }
+    }
+  </style>
+
+</head>
+
+<body class="custom-cursor">
+
+  <div class="custom-cursor__cursor"></div>
+  <div class="custom-cursor__cursor-two"></div>
+
+
+  <div class="page-wrapper">
+    <header class="main-header">
+      <nav class="main-menu">
+        <div class="main-menu__wrapper">
+          <div class="main-menu__wrapper-inner">
+            <div class="main-menu-three__left">
+              <div class="main-menu-three__logo">
+                <a href="index.html">
+                  <img id="logo1" data-img-id="IM-102" src="" alt="">
+                </a>
+              </div>
+
+            </div>
+            <div class="main-menu__main-menu-box">
+              <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+              <ul class="main-menu__list">
+                <li>
+                  <a href="index.html">Home</a>
+                </li>
+                <li>
+                  <a href="about.html">About</a>
+                </li>
+                <li class="dropdown current">
+                  <a href="#">Services</a>
+                  <ul class="shadow-box">
+                    <li><a href="index.html#enquirySection">Tickets</a></li>
+                    <li><a href="destinations.html">Destinations</a></li>
+                    <li><a href="insur.html">Insurance</a></li>
+                    <li><a href="taxi.html#taxi-fleet">Taxi</a></li>
+                    <li><a href="taxi.html#bus-fleet">Bus</a></li>
+                    <!--li><a href="high-profile-people.html">High Profile People</a></li>
+                                        <li><a href="music-tours.html">Music Tours</a></li>
+                                        <li><a href="sports-teams.html">Sports Teams</a></li-->
+                  </ul>
+                </li>
+                <li>
+                  <a href="faq.html">FAQ</a>
+                </li>
+                <li>
+                  <a href="contact.html">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <div class="main-menu__right">
+              <div class="main-menu__search-cart-call-box">
+
+                <div class="main-menu__call">
+                  <div class="main-menu__call-icon">
+                    <i class="fas fa-phone"></i>
+                  </div>
+                  <div class="main-menu__call-content">
+                    <p class="main-menu__call-sub-title">Call Anytime</p>
+                    <h5 class="main-menu__call-number"><a href="tel:+918129566053">+91 81295 66053 </a></h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="stricky-header stricked-menu main-menu">
+      <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+    <!--Page Header Start-->
+    <section class="page-header">
+      <div id="page-header-bg" class="page-header-bg" data-img="IM-138"></div>
+
+      <div class="container">
+        <div class="page-header__inner">
+          <h2>Insurance</h2>
+          <ul class="thm-breadcrumb list-unstyled">
+            <li><a href="index.html">Home</a></li>
+            <li><span>/</span></li>
+            <li>insurance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!--Page Header End-->
+
+
+
+
+
+
+
+    <!--Brand One Start-->
+    <section class="brand-two">
+      <div class="container">
+        <div class="brand-two__title"></div>
+
+        <div class="thm-swiper__slider swiper-container" data-swiper-options='{
+                        "spaceBetween": 30,
+                        "slidesPerView": 5,
+                        "loop": true,
+                        "navigation": {
+                            "nextEl": "#brand-one__swiper-button-next",
+                            "prevEl": "#brand-one__swiper-button-prev"
+                        },
+                        "autoplay": { "delay": 800 },
+                        "breakpoints": {
+                            "0": { "spaceBetween": 30, "slidesPerView": 2 },
+                            "375": { "spaceBetween": 30, "slidesPerView": 2 },
+                            "575": { "spaceBetween": 30, "slidesPerView": 3 },
+                            "767": { "spaceBetween": 30, "slidesPerView": 4 },
+                            "991": { "spaceBetween": 30, "slidesPerView": 5 },
+                            "1199": { "spaceBetween": 30, "slidesPerView": 5 }
+                        }
+                    }'>
+          <div class="swiper-wrapper">
+
+            <div class="swiper-slide"><img id="IM-147" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-148" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-149" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-150" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-151" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-152" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-153" src="" alt=""></div>
+            <div class="swiper-slide"><img id="IM-154" src="" alt=""></div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+      <hr style="flex: 1; border: none; border-top: 1px solid #000;">
+      <span style="font-weight: bold;">NOTE</span>
+      <hr style="flex: 1; border: none; border-top: 1px solid #000;">
+    </div>
+    <p style="text-align: center; max-width: 800px; margin: 0 auto 40px auto; font-size: 16px; color: #333;">
+      Please fill out the forms below to either buy a new insurance policy or raise a claim on an existing policy. Our
+      team will review your submission and get back to you promptly.
+
+
+
+
+      <!-- START: Insurance addon section (inserted between page header and footer) -->
+    <section class="insurance-section">
+      <div class="app-container">
+        <header class="header">
+          <h1 id="ins-page-title">Insurance Services</h1>
+          <p id="ins-page-subtitle">Quick and easy insurance solutions for your peace of mind</p>
+        </header>
+
+        <main class="main-content">
+          <div id="button-section" class="button-group">
+            <button class="action-button buy-policy-btn" id="buy-policy-button" onclick="insShowForm('buy-policy')">🛡️
+              Buy Policy</button>
+            <button class="action-button raise-claim-btn" id="raise-claim-button"
+              onclick="insShowForm('raise-claim')">📋 Raise Claim</button>
+          </div>
+
+          <!-- Buy Policy Form -->
+          <div id="buy-policy-form" class="form-container">
+            <button class="back-button" onclick="insHideForm()">← Back</button>
+            <h2 class="form-title">Buy Insurance Policy</h2>
+            <form id="ins-buy-form"
+              action="https://script.google.com/macros/s/AKfycbyp39owFkKgUESgLf1rQFxfhtbALQUKS1AkdZzuEqM_6xDQ3N1pptwDUvfY9g2XdnkuEg/exec"
+              method="POST" onsubmit="insHandleSubmit(event)">
+              <input type="hidden" name="_subject" value="Need to buy policy!">
+              <input type="hidden" name="_captcha" value="false">
+
+              <!-- Personal Contact Information -->
+              <section class="form-section">
+                <h3 class="section-title">🧑 Personal Contact Information</h3>
+                <div class="form-group">
+                  <label for="full-name">Full Name <span class="required">*</span></label>
+                  <input type="text" id="full-name" name="full_name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                  <label for="mobile">Mobile Phone Number (WhatsApp) <span class="required">*</span></label>
+                  <input type="tel" id="mobile" name="mobile" required placeholder="+91 XXXXX XXXXX">
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email" placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                  <label for="contact-preference">Preferred Contact Time/Method</label>
+                  <input type="text" id="contact-preference" name="contact_preference"
+                    placeholder="e.g., Call me in the evening">
+                </div>
+              </section>
+
+              <!-- Insurance Type Selection -->
+              <section class="form-section">
+                <h3 class="section-title">🛡️ Insurance Type</h3>
+                <div class="form-group">
+                  <label>What type of insurance are you enquiring about? <span class="required">*</span></label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="motor" name="insurance_type" value="Motor Insurance" required
+                        onchange="insToggleInsuranceFields()">
+                      <label for="motor">🚗 Motor Insurance</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="travel" name="insurance_type" value="Travel Insurance"
+                        onchange="insToggleInsuranceFields()">
+                      <label for="travel">✈️ Travel Insurance</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="both" name="insurance_type" value="Both"
+                        onchange="insToggleInsuranceFields()">
+                      <label for="both">🛡️ Both</label>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Motor Insurance Fields -->
+              <section id="motor-fields" class="conditional-section">
+                <h3 class="section-title">🚗 Motor Insurance Details</h3>
+
+                <div class="form-section">
+                  <h4 class="section-title" style="font-size: 18px;">Vehicle Details</h4>
+
+                  <div class="form-group">
+                    <label for="vehicle-type">Type of Vehicle <span class="required">*</span></label>
+                    <select id="vehicle-type" name="vehicle_type">
+                      <option value="">Select vehicle type</option>
+                      <option value="Car / SUV">Car / SUV</option>
+                      <option value="Two-Wheeler">Two-Wheeler</option>
+                      <option value="Commercial Vehicle or Taxi">Commercial Vehicle or Taxi</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="make-model">Make and Model <span class="required">*</span></label>
+                    <input type="text" id="make-model" name="make_model"
+                      placeholder="e.g., Toyota Fortuner, Honda Activa">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="variant">Variant/Fuel Type <span class="required">*</span></label>
+                    <input type="text" id="variant" name="variant" placeholder="e.g., Petrol 1.2L, Diesel Automatic">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="year">Year of Manufacture/Registration <span class="required">*</span></label>
+                    <input type="number" id="year" name="year" min="1980" max="2025" placeholder="e.g., 2020">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="expiry-date">Current Policy Expiry Date</label>
+                    <input type="date" id="expiry-date" name="expiry_date">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="registration">Registration Number</label>
+                    <input type="text" id="registration" name="registration" placeholder="e.g., MH 01 AB 1234">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="policy-type">Policy Type Requested <span class="required">*</span></label>
+                    <select id="policy-type" name="policy_type">
+                      <option value="">Select policy type</option>
+                      <option value="Comprehensive/Package Policy">Comprehensive/Package Policy</option>
+                      <option value="Third-Party Only">Third-Party Only (TP)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <h4 class="section-title" style="font-size: 18px;">Driver/Policy Details</h4>
+
+                  <div class="form-group">
+                    <label for="ncb">Previous Year's No Claim Bonus (NCB)</label>
+                    <select id="ncb" name="ncb">
+                      <option value="">Select NCB</option>
+                      <option value="0%">0%</option>
+                      <option value="20%">20%</option>
+                      <option value="25%">25%</option>
+                      <option value="35%">35%</option>
+                      <option value="45%">45%</option>
+                      <option value="50%">50%</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Any claims made in the last year? <span class="required">*</span></label>
+                    <div class="radio-group">
+                      <div class="radio-option">
+                        <input type="radio" id="claims-yes" name="claims_last_year" value="Yes">
+                        <label for="claims-yes">Yes</label>
+                      </div>
+                      <div class="radio-option">
+                        <input type="radio" id="claims-no" name="claims_last_year" value="No">
+                        <label for="claims-no">No</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="addons">Do you need any Add-ons?</label>
+                    <textarea id="addons" name="addons"
+                      placeholder="e.g., Zero depreciation, Engine protection, Roadside assistance"></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Travel Insurance Fields -->
+              <section id="travel-fields" class="conditional-section">
+                <h3 class="section-title">✈️ Travel Insurance Details</h3>
+
+                <div class="form-section">
+                  <h4 class="section-title" style="font-size: 18px;">Trip Details</h4>
+
+                  <div class="form-group">
+                    <label for="destination">Destination Country/Region <span class="required">*</span></label>
+                    <input type="text" id="destination" name="destination" placeholder="e.g., USA, Schengen Area, Asia">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="start-date">Travel Start Date (Departure) <span class="required">*</span></label>
+                    <input type="date" id="start-date" name="start_date">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="end-date">Travel End Date (Return) <span class="required">*</span></label>
+                    <input type="date" id="end-date" name="end_date">
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <h4 class="section-title" style="font-size: 18px;">Traveler Details</h4>
+
+                  <div class="form-group">
+                    <label>Number of Travelers <span class="required">*</span></label>
+                    <div class="number-input-group">
+                      <div>
+                        <label for="adults" style="font-size: 14px; margin-bottom: 4px;">Adults (18+)</label>
+                        <input type="number" id="adults" name="adults" min="0" value="1" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="children" style="font-size: 14px; margin-bottom: 4px;">Children (&lt;18)</label>
+                        <input type="number" id="children" name="children" min="0" value="0" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="seniors" style="font-size: 14px; margin-bottom: 4px;">Seniors (60+)</label>
+                        <input type="number" id="seniors" name="seniors" min="0" value="0" placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <button type="submit" class="submit-button" id="submit-btn">Submit Enquiry</button>
+            </form>
+          </div>
+
+          <!-- Raise Claim Form -->
+          <div id="raise-claim-form" class="form-container">
+            <button class="back-button" onclick="insHideForm()">← Back</button>
+            <h2 class="form-title">Raise Insurance Claim</h2>
+
+            <form id="ins-claim-form"
+              action="https://script.google.com/macros/s/AKfycbwtiT93AgiZ3LxcTYvEPfwHZ7b7CcLI3h1h245Nantxm-EMD35OVA8F70Cvh_rMmtU/exec"
+              method="POST" onsubmit="insHandleSubmit(event)">
+              <input type="hidden" name="_subject" value="Insurance Claim Request!">
+              <input type="hidden" name="_captcha" value="false">
+
+              <section class="form-section">
+                <h3 class="section-title">📋 Claim Information</h3>
+
+                <div class="form-group">
+                  <label for="claim-name">Full Name <span class="required">*</span></label>
+                  <input type="text" id="claim-name" name="full_name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                  <label for="claim-mobile">Mobile Phone Number <span class="required">*</span></label>
+                  <input type="tel" id="claim-mobile" name="mobile" required placeholder="+91 XXXXX XXXXX">
+                </div>
+
+                <div class="form-group">
+                  <label for="claim-email">Email Address <span class="required">*</span></label>
+                  <input type="email" id="claim-email" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                  <label for="policy-number">Policy Number <span class="required">*</span></label>
+                  <input type="text" id="policy-number" name="policy_number" required
+                    placeholder="Enter your policy number">
+                </div>
+
+                <div class="form-group">
+                  <label for="claim-type">Type of Insurance <span class="required">*</span></label>
+                  <select id="claim-type" name="claim_type" required>
+                    <option value="">Select insurance type</option>
+                    <option value="Motor Insurance">Motor Insurance</option>
+                    <option value="Travel Insurance">Travel Insurance</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="incident-date">Date of Incident <span class="required">*</span></label>
+                  <input type="date" id="incident-date" name="incident_date" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="claim-description">Claim Description <span class="required">*</span></label>
+                  <textarea id="claim-description" name="claim_description" required
+                    placeholder="Please provide detailed description of the incident"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="claim-amount">Estimated Claim Amount</label>
+                  <input type="text" id="claim-amount" name="claim_amount" placeholder="e.g., ₹50,000">
+                </div>
+              </section>
+
+              <button type="submit" class="submit-button" id="claim-submit-btn">Submit Claim</button>
+            </form>
+          </div>
+        </main>
+      </div>
+
+      <!-- Success Notification and overlay -->
+      <div class="overlay" id="ins-overlay" onclick="insCloseNotification()"></div>
+      <div class="success-notification" id="ins-success-notification">
+        <div class="icon">✅</div>
+        <h3>Thank You!</h3>
+        <p>Your request has been submitted successfully. Our expert will call you within 24 hours.</p>
+        <button onclick="insCloseNotification()">Close</button>
+      </div>
+
+      <!-- Script block for insurance section. Namespaced functions with ins prefix to avoid collision -->
+      <script>
+        (function () {
+          // default config for element SDK mapping, will update labels if available
+          const defaultConfig = {
+            page_title: "Insurance Services",
+            page_subtitle: "Quick and easy insurance solutions for your peace of mind",
+            buy_policy_button: "🛡️ Buy Policy",
+            raise_claim_button: "📋 Raise Claim"
+          };
+
+          function onConfigChange(config) {
+            const title = config.page_title || defaultConfig.page_title;
+            const subtitle = config.page_subtitle || defaultConfig.page_subtitle;
+            const buyButton = config.buy_policy_button || defaultConfig.buy_policy_button;
+            const claimButton = config.raise_claim_button || defaultConfig.raise_claim_button;
+
+            document.getElementById('ins-page-title').textContent = title;
+            document.getElementById('ins-page-subtitle').textContent = subtitle;
+            document.getElementById('buy-policy-button').textContent = buyButton;
+            document.getElementById('raise-claim-button').textContent = claimButton;
+          }
+
+          // show/hide forms
+          window.insShowForm = function (formType) {
+            document.getElementById('button-section').style.display = 'none';
+            if (formType === 'buy-policy') {
+              document.getElementById('buy-policy-form').classList.add('active');
+            } else if (formType === 'raise-claim') {
+              document.getElementById('raise-claim-form').classList.add('active');
+            }
+          };
+
+          window.insHideForm = function () {
+            document.getElementById('buy-policy-form').classList.remove('active');
+            document.getElementById('raise-claim-form').classList.remove('active');
+            document.getElementById('button-section').style.display = 'flex';
+          };
+
+          window.insToggleInsuranceFields = function () {
+            const motorFields = document.getElementById('motor-fields');
+            const travelFields = document.getElementById('travel-fields');
+            const checked = document.querySelector('input[name="insurance_type"]:checked');
+            if (!checked) return;
+            const selectedType = checked.value;
+
+            motorFields.classList.remove('active');
+            travelFields.classList.remove('active');
+
+            const motorInputs = motorFields.querySelectorAll('input, select, textarea');
+            const travelInputs = travelFields.querySelectorAll('input, select, textarea');
+
+            // store previous required state
+            motorInputs.forEach(input => {
+              if (input.hasAttribute('required')) {
+                input.setAttribute('data-was-required', 'true');
+              }
+            });
+
+            travelInputs.forEach(input => {
+              if (input.hasAttribute('required')) {
+                input.setAttribute('data-was-required', 'true');
+              }
+            });
+
+            // remove required attr first
+            motorInputs.forEach(i => i.removeAttribute('required'));
+            travelInputs.forEach(i => i.removeAttribute('required'));
+
+            if (selectedType === 'Motor Insurance' || selectedType === 'Both') {
+              motorFields.classList.add('active');
+              motorInputs.forEach(input => {
+                if (input.getAttribute('data-was-required') === 'true') {
+                  input.setAttribute('required', 'required');
+                }
+              });
+            }
+
+            if (selectedType === 'Travel Insurance' || selectedType === 'Both') {
+              travelFields.classList.add('active');
+              travelInputs.forEach(input => {
+                if (input.getAttribute('data-was-required') === 'true') {
+                  input.setAttribute('required', 'required');
+                }
+              });
+            }
+          };
+
+          // Unified submit handler for both forms
+          window.insHandleSubmit = function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const submitBtn = form.querySelector('.submit-button');
+            const originalBtnText = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Submitting...';
+            }
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'Accept': 'application/json'
+              }
+            })
+              .then(response => {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = originalBtnText || 'Submit Enquiry';
+                }
+                form.reset();
+                insHideForm();
+                insShowNotification();
+              })
+              .catch(error => {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = originalBtnText || 'Submit Enquiry';
+                }
+                // show notification anyway, user will get contact
+                form.reset();
+                insHideForm();
+                insShowNotification();
+              });
+          };
+
+          window.insShowNotification = function () {
+            document.getElementById('ins-overlay').classList.add('show');
+            document.getElementById('ins-success-notification').classList.add('show');
+          };
+
+          window.insCloseNotification = function () {
+            document.getElementById('ins-overlay').classList.remove('show');
+            document.getElementById('ins-success-notification').classList.remove('show');
+          };
+
+          // Initialize elementSdk if available
+          if (window.elementSdk) {
+            window.elementSdk.init({
+              defaultConfig: defaultConfig,
+              onConfigChange: onConfigChange,
+              mapToCapabilities: (config) => ({
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+              }),
+              mapToEditPanelValues: (config) => new Map([
+                ["page_title", config.page_title || defaultConfig.page_title],
+                ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                ["buy_policy_button", config.buy_policy_button || defaultConfig.buy_policy_button],
+                ["raise_claim_button", config.raise_claim_button || defaultConfig.raise_claim_button]
+              ])
+            });
+          }
+
+          // Expose config change function for preconfigured use
+          window.insOnConfigChange = onConfigChange;
+        })();
+      </script>
+    </section>
+    <!-- END: Insurance addon section -->
+
+
+    <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+      <hr style="flex: 1; border: none; border-top: 1px solid #000;">
+      <span style="font-weight: bold;">please read the t&c and privacy policy for more details</span>
+      <hr style="flex: 1; border: none; border-top: 1px solid #000;">
+    </div>
+
+
+    <!--Site Footer Start-->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__inner">
+          <div class="site-footer__shape-1 zoom-fade-3">
+            <img src="assets/images/shapes/site-footer-shape-1.png" alt="">
+          </div>
+          <div class="site-footer__top">
+            <div class="row">
+              <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                <div class="footer-widget__column footer-widget__about">
+                  <div class="footer-widget__logo">
+                    <a href="/index.html">
+                      <img data-img="IM-122" src="" alt="">
+                    </a>
+                  </div>
+                  <script>
+                    fetch('assets/data/data.json')
+                      .then(res => res.json())
+                      .then(data => {
+                        document.querySelectorAll('[data-img]').forEach(el => {
+                          const id = el.getAttribute('data-img');
+                          if (data[id]) {
+                            el.src = data[id];
+                          }
+                        });
+                      });
+                  </script>
+
+                  <div class="footer-widget__about-text-box">
+                    <p class="footer-widget__about-text">Your journey begins with us – booking flights made easy.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                <div class="footer-widget__column footer-widget__Explore">
+                  <div class="footer-widget__title-box">
+                    <h3 class="footer-widget__title">Explore</h3>
+                  </div>
+                  <ul class="footer-widget__Explore-list list-unstyled">
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="404.html">Book Flight</a></li>
+                    <li><a href="404.html">Book Room</a></li>
+                    <li><a href="404.html">Insurance</a></li>
+                    <li><a href="404.html">Book Taxi / Bus</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                <div class="footer-widget__column footer-widget__links">
+                  <div class="footer-widget__title-box">
+                    <h3 class="footer-widget__title">Links</h3>
+                  </div>
+                  <ul class="footer-widget__Explore-list list-unstyled">
+                    <li><a href="terms-of-use.html">Terms of Use</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                    <li><a href="javascript:void(0)" onclick="GDPR.showSettings()">Manage Cookies</a></li>
+                    <li><a href="faq.html">FAQs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
+                <div class="footer-widget__column footer-widget__Contact">
+                  <div class="footer-widget__title-box">
+                    <h3 class="footer-widget__title">Contact</h3>
+                  </div>
+                  <ul class="footer-widget__Contact-list list-unstyled">
+                    <li>
+                      <div class="icon">
+                        <span class="fas fa-phone"></span>
+                      </div>
+                      <div class="text">
+                        <p><a href="tel:+9288006780">+91 81295 66053</a></p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <span class="fas fa-envelope"></span>
+                      </div>
+                      <div class="text">
+                        <p><a href="mailto:help@flylighttoursandtravels.com">help@flylighttoursandtravels.com</a></p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <span class="fas fa-map-marker"></span>
+                      </div>
+                      <div class="text">
+                        <p>Fly Light Tours and Travels, Gridify, SSV College Jn, Perumbavoor, Ernakulam, Kerala</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="site-footer__bottom">
+            <div class="site-footer__bottom-inner">
+              <div class="site-footer__bottom-left">
+                <p class="site-footer__bottom-text">
+                  © Copyright 2026 Fly Light Tours and Travels. All Rights Reserved.
+                </p>
+                <p class="site-footer__bottom-text2">
+                  <a href="https://www.gridify.in" target="_blank">Powered by GRIDIFY</a>
+                </p>
+              </div>
+
+              <div class="site-footer__bottom-right">
+                <div class="site-footer__social">
+                  <a href="www.x.com"><i class="fab fa-twitter"></i></a>
+                  <a href="https://wa.me/918129566053?text=Hy%20Fly%20Light%2C%20I%20have%20an%20enquiry%2E%2E%2E%21"><i
+                      class="fab fa-whatsapp"></i></a>
+                  <a href="https://www.instagram.com/fly_light_tours_and_travels/"><i class="fab fa-instagram"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!--Site Footer End-->
+
+  </div><!-- /.page-wrapper -->
+
+  <div class="mobile-nav__wrapper">
+    <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+    <div class="mobile-nav__content">
+      <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+
+      <div class="logo-box">
+        <a href="index.html" aria-label="logo image"><img src="assets/images/resources/logo-2.png" width="143"
+            alt="" /></a>
+      </div>
+      <div class="mobile-nav__container"></div>
+
+      <ul class="mobile-nav__contact list-unstyled">
+        <li>
+          <i class="fa fa-envelope"></i>
+          <a href="mailto:help@flylighttoursandtravels.com">help@flylighttoursandtravels.com</a>
+        </li>
+        <li>
+          <i class="fa fa-phone-alt"></i>
+          <a href="tel:+918129566053">+91 81295 66053</a>
+        </li>
+      </ul>
+      <div class="mobile-nav__top">
+        <div class="mobile-nav__social">
+          <a href="#" class="fab fa-twitter"></a>
+          <a href="#" class="fab fa-facebook-square"></a>
+          <a href="#" class="fab fa-pinterest-p"></a>
+          <a href="#" class="fab fa-instagram"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-popup">
+    <div class="search-popup__overlay search-toggler"></div>
+    <div class="search-popup__content">
+      <form action="#">
+        <label for="search" class="sr-only">search here</label>
+        <input type="text" id="search" placeholder="Search Here..." />
+        <button type="submit" aria-label="search submit" class="thm-btn">
+          <i class="icon-magnifying-glass"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="icon-right-arrow"></i></a>
+
+  <script src="assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+  <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendors/jarallax/jarallax.min.js"></script>
+  <script src="assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+  <script src="assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+  <script src="assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+  <script src="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+  <script src="assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+  <script src="assets/vendors/nouislider/nouislider.min.js"></script>
+  <script src="assets/vendors/odometer/odometer.min.js"></script>
+  <script src="assets/vendors/swiper/swiper.min.js"></script>
+  <script src="assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+  <script src="assets/vendors/wnumb/wNumb.min.js"></script>
+  <script src="assets/vendors/wow/wow.js"></script>
+  <script src="assets/vendors/isotope/isotope.js"></script>
+  <script src="assets/vendors/countdown/countdown.min.js"></script>
+  <script src="assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+  <script src="assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+  <script src="assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+  <script src="assets/vendors/vegas/vegas.min.js"></script>
+  <script src="assets/vendors/jquery-ui/jquery-ui.js"></script>
+  <script src="assets/vendors/timepicker/timePicker.js"></script>
+  <script src="assets/vendors/circleType/jquery.circleType.js"></script>
+  <script src="assets/vendors/circleType/jquery.lettering.min.js"></script>
+  <script src="assets/vendors/nice-select/jquery.nice-select.min.js"></script>
+
+  <!-- template js -->
+  <script src="assets/js/jetly.js"></script>
+  <!-- Global Site Loader -->
+  <script type="module">
+    import { applySiteAssets } from './assets/js/assets-loader.js';
+    import { initEnquiryForm } from './assets/js/enquiry-handler.js';
+    applySiteAssets();
+    initEnquiryForm('ins-buy-form', {
+      type: 'insurance_buy',
+      nameField: 'full_name',
+      emailField: 'email',
+      phoneField: 'mobile',
+      serviceField: 'insurance_type'
+    });
+    initEnquiryForm('ins-claim-form', {
+      type: 'insurance_claim',
+      nameField: 'claim_full_name',
+      emailField: 'claim_email',
+      phoneField: 'claim_mobile',
+      serviceField: 'claim_insurance_type'
+    });
+  </script>
+</body>
+
+</html>

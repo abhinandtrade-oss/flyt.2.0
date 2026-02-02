@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Settings - FLTT </title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        .settings-card {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .config-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(232, 96, 76, 0.1);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            color: #0369a1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title m-0">Email Webhook Configuration</h1>
+                    <div id="config-status-badge">
+                        <span class="badge bg-secondary">STATUS: UNCONFIGURED</span>
+                    </div>
+                </div>
+
+                <div class="content-card settings-card">
+                    <div class="config-header">
+                        <div class="config-icon"><i class="fab fa-google"></i></div>
+                        <div>
+                            <h5 class="mb-1">Google Apps Script Setup</h5>
+                            <p class="text-muted small mb-0">Send emails via your own Google Account using a Web App.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Integration Method:</strong> Deploy a Google Apps Script as a <b>Web App</b> (set access
+                        to "Anyone") and paste the deployment URL below.
+                        <button class="btn btn-link btn-sm p-0 d-block mt-2" onclick="showGasGuide()">View Script Code &
+                            Instructions</button>
+                    </div>
+
+                    <form id="emailConfigForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-600">Google Script Web App URL</label>
+                            <input type="url" id="gas_url" class="form-control"
+                                placeholder="https://script.google.com/macros/s/.../exec" required>
+                            <div class="form-text small">Deployed from your primary Google Account.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-600">Sender Email ID (Alias)</label>
+                            <input type="email" id="sender_email" class="form-control" placeholder="yourname@domain.com"
+                                required>
+                            <div class="form-text small">Must be yourself or a "Send mail as" alias in your Gmail.</div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-custom flex-grow-1 py-2">
+                                <i class="fas fa-save me-2"></i> Save Configuration
+                            </button>
+                            <button type="button" id="testConfigBtn" class="btn btn-outline-primary py-2 px-4"
+                                style="display: none;">
+                                <i class="fas fa-vial me-2"></i> Test & Activate
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- GAS Guide Modal -->
+    <div class="modal fade" id="gasGuideModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Google Apps Script Deployment (v2 - Alias Support)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info small py-2 mb-3">
+                        <i class="fas fa-magic me-2"></i> We've generated this code specifically for your account.
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-600 small">Choose Script Type:</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="scriptType" id="typeDynamic" checked
+                                onchange="updateGasCode()">
+                            <label class="btn btn-outline-primary btn-sm" for="typeDynamic">Dynamic Alias
+                            </label>
+
+                            <input type="radio" class="btn-check" name="scriptType" id="typeFixed"
+                                onchange="updateGasCode()">
+                            <label class="btn btn-outline-primary btn-sm" for="typeFixed">Employee Email</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="m-0 small text-muted">Copy & Paste this code:</h6>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="copyGasScript()">
+                            <i class="fas fa-copy me-1"></i> Copy Script
+                        </button>
+                    </div>
+                    <pre id="gasCodeBlock" class="bg-light p-3 rounded"
+                        style="font-size: 11px; max-height: 250px; overflow-y: auto;"></pre>
+
+                    <h6 class="mt-4">Implementation Steps:</h6>
+                    <ol class="small">
+                        <li>Visit <a href="https://script.google.com" target="_blank">script.google.com</a> and create a
+                            "New Project".</li>
+                        <li>Paste the code above, <b>replacing everything</b> in the editor.</li>
+                        <li>Click <b>Deploy</b> > <b>New Deployment</b>.</li>
+                        <li>Select type: <b>Web App</b>.</li>
+                        <li>Set "Execute as" to <b>Me</b> and "Who has access" to <b>Anyone</b>.</li>
+                        <li>Click Deploy, Authorize access, and copy the <b>Web App URL</b>.</li>
+                    </ol>
+                    <div class="alert alert-secondary small py-2 mt-3">
+                        <i class="fas fa-sync me-2"></i> <b>IMPORTANT:</b> If you are updating an existing script, you
+                        MUST choose <b>Deploy > New Deployment</b> again to get a fresh URL or update the existing one.
+                        Simply saving doesn't update the Web App.
+                    </div>
+                    <div class="alert alert-warning small py-2 mt-3 mb-0">
+                        <div class="fw-bold"><i class="fas fa-exclamation-circle me-1"></i> CRITICAL: Why isn't my
+                            'From' address changing?</div>
+                        <p class="mb-1">For security, Google only allows scripts to send from emails that are
+                            <b>verified aliases</b> of the account that deployed the script.
+                        </p>
+                        <ul class="mb-0 ps-3">
+                            <li>Login to your <b>Gmail</b> account.</li>
+                            <li>Go to <b>Settings</b> > <b>Accounts and Import</b>.</li>
+                            <li>Add <b>${senderEmail}</b> under "Send mail as".</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        let currentUser = null;
+        let configData = null;
+
+        async function init() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = session.user;
+            document.body.style.display = 'block';
+
+
+            await loadConfig();
+
+            document.getElementById('testConfigBtn').onclick = testAndActivate;
+        }
+
+        async function loadConfig() {
+            const { data, error } = await supabase
+                .from('user_email_config')
+                .select('*')
+                .eq('id', currentUser.id)
+                .maybeSingle();
+
+            configData = data;
+            const statusBadge = document.getElementById('config-status-badge');
+            const testBtn = document.getElementById('testConfigBtn');
+
+            if (data && data.google_script_url) {
+                document.getElementById('gas_url').value = data.google_script_url;
+                document.getElementById('sender_email').value = data.sender_email || currentUser.email;
+                testBtn.style.display = 'block';
+
+                const status = data.status || 'pending';
+                const statusMap = {
+                    'active': { class: 'bg-success', text: 'ACTIVE' },
+                    'failed': { class: 'bg-danger', text: 'FAILED' },
+                    'pending': { class: 'bg-warning text-dark', text: 'PENDING ACTIVATION' }
+                };
+
+                const s = statusMap[status] || statusMap.pending;
+                statusBadge.innerHTML = `<span class="badge ${s.class}">STATUS: ${s.text}</span>`;
+            } else {
+                document.getElementById('sender_email').value = currentUser.email;
+                statusBadge.innerHTML = `<span class="badge bg-secondary">STATUS: UNCONFIGURED</span>`;
+                testBtn.style.display = 'none';
+            }
+        }
+
+        window.showGasGuide = () => {
+            updateGasCode();
+            new bootstrap.Modal(document.getElementById('gasGuideModal')).show();
+        };
+
+        window.updateGasCode = () => {
+            const isFixed = document.getElementById('typeFixed').checked;
+            const senderEmail = document.getElementById('sender_email').value || currentUser.email;
+
+            const dynamicTemplate = `function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var options = {
+      htmlBody: data.body,
+      name: data.from_name || "FLTT Agent"
+    };
+
+    // Safely check if the alias is valid before using it
+    if (data.from_email) {
+      var aliases = GmailApp.getAliases();
+      if (aliases.indexOf(data.from_email) > -1) {
+        options.from = data.from_email;
+      }
+    }
+
+    GmailApp.sendEmail(data.to, data.subject, "", options);
+    return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService.createTextOutput("Error: " + err.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}`;
+
+            const fixedTemplate = `function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var options = {
+      htmlBody: data.body,
+      name: data.from_name || "FLTT Agent"
+    };
+
+    var targetFrom = "${senderEmail}";
+    var aliases = GmailApp.getAliases();
+    
+    // Only use 'from' if it's a verified alias
+    if (aliases.indexOf(targetFrom) > -1) {
+      options.from = targetFrom;
+    }
+
+    GmailApp.sendEmail(data.to, data.subject, "", options);
+    return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService.createTextOutput("Error: " + err.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}`;
+
+            document.getElementById('gasCodeBlock').innerText = isFixed ? fixedTemplate : dynamicTemplate;
+        };
+
+        window.copyGasScript = () => {
+            const code = document.getElementById('gasCodeBlock').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                window.showAlert('Script code copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Copy failed', err);
+                window.showAlert('Failed to copy. Please select and copy manually.', 'error');
+            });
+        };
+
+        document.getElementById('emailConfigForm').onsubmit = async (e) => {
+            e.preventDefault();
+
+            const confirmed = await window.showConfirm('Save Configuration', 'Are you sure you want to save these email webhook settings?');
+            if (!confirmed) return;
+
+            const payload = {
+                id: currentUser.id,
+                user_email: currentUser.email,
+                google_script_url: document.getElementById('gas_url').value.trim(),
+                sender_email: document.getElementById('sender_email').value.trim(),
+                status: 'pending',
+                updated_at: new Date().toISOString()
+            };
+
+            const { error } = await supabase
+                .from('user_email_config')
+                .upsert(payload, { onConflict: 'id' });
+
+            if (error) {
+                window.showAlert('Failed to save configuration: ' + error.message, 'error');
+            } else {
+                window.showAlert('Configuration saved! Please run a test to activate.', 'success');
+                await loadConfig();
+            }
+        };
+
+        async function testAndActivate() {
+            if (!configData || !configData.google_script_url) return;
+
+            const confirmed = await window.showConfirm('Test & Activate', `This will send a test email to ${currentUser.email}. Continue?`);
+            if (!confirmed) return;
+
+            const btn = document.getElementById('testConfigBtn');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Testing...';
+
+            window.showAlert('Triggering Google script...', 'info');
+
+            const payload = {
+                to: currentUser.email,
+                subject: 'Google Script Activation Test | FLTT',
+                from_name: 'FLTT Agent Check',
+                from_email: configData.sender_email || currentUser.email, // Use alias
+                body: `
+                    <h3>Connection Successful!</h3>
+                    <p>This is a test email sent via your <b>Google Apps Script</b> Web App.</p>
+                    <p>Your configuration is now marked as <b>ACTIVE</b> in the dashboard.</p>
+                    <hr>
+                    <p><small>Time: ${new Date().toLocaleString()}</small></p>
+                `
+            };
+
+            try {
+                // Using no-cors as direct browser POSTs to GAS often trigger CORS blocks 
+                // but the request still reaches Google's servers.
+                await fetch(configData.google_script_url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Assume success if no throw
+                const newStatus = 'active';
+
+                await supabase
+                    .from('user_email_config')
+                    .update({ status: newStatus })
+                    .eq('id', currentUser.id);
+
+                window.showAlert('Test trigger sent! Check your inbox soon. Status set to ACTIVE.', 'success');
+                await loadConfig();
+            } catch (e) {
+                window.showAlert('Webhook Error: Check the URL format.', 'error');
+                console.error(e);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Destinations - FLTT Admin</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--content-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+            /* Hidden for auth check */
+        }
+
+        .dest-thumb-preview {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #eee;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+    </style>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        async function initAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                window.supabaseClient = supabase;
+                document.body.style.display = 'block';
+            }
+        }
+        initAuth();
+    </script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+
+                <h1 class="page-title">Manage Destinations</h1>
+                <div class="content-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                        <div class="card-heading m-0 b-0 border-0">
+                            <i class="fas fa-map-marker-alt text-primary"></i> Destination Registry
+                        </div>
+                        <div class="d-flex gap-2">
+                            <!--button onclick="importDefaults()" class="btn btn-outline-custom btn-sm">
+                                <i class="fas fa-file-import me-1"></i> Import Existing
+                            </button-->
+                            <button onclick="openDestModal()" class="btn btn-custom btn-sm">
+                                <i class="fas fa-plus me-1"></i> Add Destination
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 100px;">Photo</th>
+                                    <th>Route / Title</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
+                                    <th>Status</th>
+                                    <th style="width: 150px; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="destTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Destination Modal -->
+    <div class="modal fade" id="destModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="destModalTitle">Add Destination</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="destId">
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Route Title</label>
+                        <input type="text" class="form-control" id="destTitle" placeholder="e.g. Paris - Barcelona">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-600">Departure Time</label>
+                            <input type="text" class="form-control" id="destDeparture" placeholder="e.g. 16:50">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-600">Arrival Time</label>
+                            <input type="text" class="form-control" id="destArrival" placeholder="e.g. 20:42">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Image (Key or URL)</label>
+                        <input type="text" class="form-control" id="destImageKey" placeholder="IM-141 or https://...">
+                    </div>
+                    <div class="mb-3 form-check form-switch ms-1">
+                        <input class="form-check-input" type="checkbox" id="destEnabled" checked>
+                        <label class="form-check-label fw-600" for="destEnabled">Show in Public Portal</label>
+                    </div>
+                    <div id="destModalStatus" class="status-msg"></div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="saveDestItem()" class="btn btn-custom px-4">Save Destination</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { saveContent, fetchContent, fetchAllContent } from '../assets/js/supabase-client.js';
+
+        const DEST_KEY = 'admin_destinations_config_json';
+        const destModal = new bootstrap.Modal(document.getElementById('destModal'));
+        let destItems = [];
+        let siteImages = {};
+
+        async function loadDestData() {
+            const [destData, imagesData] = await Promise.all([
+                fetchContent(DEST_KEY),
+                fetchAllContent()
+            ]);
+            siteImages = imagesData;
+            try { destItems = destData ? JSON.parse(destData) : []; } catch (e) { destItems = []; }
+        }
+
+        const defaultData = [
+            { id: 'dest_1', title: 'Paris - Barcelona', departure: '16:50', arrival: '20:42', imageKey: 'IM-141', enabled: true },
+            { id: 'dest_2', title: 'Hamburg – London', departure: '16:50', arrival: '20:42', imageKey: 'IM-142', enabled: true },
+            { id: 'dest_3', title: 'London – Madrid', departure: '16:50', arrival: '20:42', imageKey: 'IM-143', enabled: true },
+            { id: 'dest_4', title: 'New york – Dubai', departure: '16:50', arrival: '20:42', imageKey: 'IM-144', enabled: true },
+            { id: 'dest_5', title: 'Rome – Paris', departure: '16:50', arrival: '20:42', imageKey: 'IM-145', enabled: true },
+            { id: 'dest_6', title: 'Moscow – Egypt', departure: '16:50', arrival: '20:42', imageKey: 'IM-146', enabled: true }
+        ];
+
+        window.importDefaults = async () => {
+            const confirmed = await window.showConfirm('Import Defaults', 'This will add the 6 initial destinations. Continue?');
+            if (!confirmed) return;
+
+            const currentIds = destItems.map(i => i.id);
+            const toAdd = defaultData.filter(d => !currentIds.includes(d.id));
+
+            if (toAdd.length === 0) {
+                window.showAlert('Default destinations already exist.', 'info');
+                return;
+            }
+
+            destItems = [...destItems, ...toAdd];
+            const res = await saveContent(DEST_KEY, JSON.stringify(destItems));
+            if (!res.error) {
+                renderDestTable();
+                window.showAlert(`${toAdd.length} destinations imported!`, 'success');
+            } else {
+                window.showAlert('Import failed: ' + res.error.message, 'error');
+            }
+        };
+
+        const showStatus = (el, type, msg) => {
+            el.textContent = msg;
+            el.className = `status-msg active ${type}`;
+            if (type === 'success') setTimeout(() => el.className = 'status-msg', 3000);
+        };
+
+        window.openDestModal = (id = null) => {
+            const item = id ? destItems.find(i => i.id === id) : null;
+            document.getElementById('destId').value = id || '';
+            document.getElementById('destTitle').value = item ? item.title : '';
+            document.getElementById('destDeparture').value = item ? item.departure : '';
+            document.getElementById('destArrival').value = item ? item.arrival : '';
+            document.getElementById('destImageKey').value = item ? item.imageKey : '';
+            document.getElementById('destEnabled').checked = item ? (item.enabled !== false) : true;
+            document.getElementById('destModalTitle').innerText = id ? 'Edit Destination' : 'Add Destination';
+            destModal.show();
+        };
+
+        window.saveDestItem = async () => {
+            const id = document.getElementById('destId').value || 'dest_' + Date.now();
+            const title = document.getElementById('destTitle').value;
+            const departure = document.getElementById('destDeparture').value;
+            const arrival = document.getElementById('destArrival').value;
+            const imageKey = document.getElementById('destImageKey').value.trim();
+            const enabled = document.getElementById('destEnabled').checked;
+
+            if (!title || !imageKey) {
+                window.showAlert('Title and Image are required', 'warning');
+                return;
+            }
+
+            const isEdit = !!document.getElementById('destId').value;
+            const confirmed = await window.showConfirm(isEdit ? 'Update Destination' : 'Save Destination', `Are you sure?`);
+            if (!confirmed) return;
+
+            const newItem = { id, title, departure, arrival, imageKey, enabled };
+            const existingIndex = destItems.findIndex(i => i.id === id);
+            if (existingIndex > -1) destItems[existingIndex] = newItem;
+            else destItems.push(newItem);
+
+            const statusEl = document.getElementById('destModalStatus');
+            showStatus(statusEl, 'loading', 'Saving...');
+
+            const res = await saveContent(DEST_KEY, JSON.stringify(destItems));
+            if (!res.error) {
+                showStatus(statusEl, 'success', 'Saved!');
+                setTimeout(() => { destModal.hide(); renderDestTable(); }, 1000);
+            } else {
+                showStatus(statusEl, 'error', res.error.message);
+            }
+        };
+
+        window.deleteDestItem = async (id) => {
+            const confirmed = await window.showConfirm('Remove', 'Are you sure?');
+            if (confirmed) {
+                destItems = destItems.filter(i => i.id !== id);
+                const res = await saveContent(DEST_KEY, JSON.stringify(destItems));
+                if (!res.error) {
+                    renderDestTable();
+                    window.showAlert('Removed!', 'success');
+                } else {
+                    window.showAlert('Failed!', 'error');
+                }
+            }
+        };
+
+        window.renderDestTable = async () => {
+            await loadDestData();
+            const tbody = document.getElementById('destTableBody');
+            tbody.innerHTML = destItems.map(i => {
+                const imgUrl = i.imageKey.startsWith('http') ? i.imageKey : (siteImages[i.imageKey] || '');
+                return `
+                <tr>
+                    <td><img src="${imgUrl}" class="dest-thumb-preview" onerror="this.src='../assets/images/resources/logo-1.png'"></td>
+                    <td><div class="fw-600">${i.title}</div><small class="text-muted">${i.imageKey}</small></td>
+                    <td>${i.departure || '-'}</td>
+                    <td>${i.arrival || '-'}</td>
+                    <td>
+                        ${i.enabled !== false ?
+                        '<span class="badge bg-success status-badge">ENABLED</span>' :
+                        '<span class="badge bg-danger status-badge">DISABLED</span>'}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-info me-2" onclick="openDestModal('${i.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDestItem('${i.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `}).join('') || '<tr><td colspan="6" class="text-center py-4 text-muted">No destinations found.</td></tr>';
+        };
+
+        renderDestTable();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FLTT</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin-common.css" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #fceceb;
+            /* Very light tint of primary */
+            background-image: radial-gradient(#e8604c10 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-dark);
+            margin: 0;
+            display: none;
+        }
+
+        /* --- Dashboard Grid Layout --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+            padding-bottom: 40px;
+        }
+
+        /* --- Welcome Banner --- */
+        .welcome-section {
+            grid-column: span 12;
+            background: linear-gradient(135deg, #e8604c 0%, #ff8a75 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(232, 96, 76, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .welcome-text p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .date-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-align: right;
+        }
+
+        .date-badge .time {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .date-badge .date {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* --- KPI Cards --- */
+        .kpi-wrapper {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            border-color: rgba(232, 96, 76, 0.1);
+        }
+
+        .kpi-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .kpi-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a1a1a;
+        }
+
+        .kpi-content p {
+            margin: 2px 0 0;
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Main Chart Section --- */
+        .chart-section {
+            grid-column: span 8;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            height: 400px;
+            /* Fixed height for consistency */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Quick Actions Grid (Right Side) --- */
+        .actions-section {
+            grid-column: span 4;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-left: 5px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border-left-color: var(--primary);
+        }
+
+        .action-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-icon {
+            width: 42px;
+            height: 42px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .action-card:hover .action-icon {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-info h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .action-info span {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* --- Recent Activity / Modules Grid --- */
+        .modules-grid {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at top right, rgba(232, 96, 76, 0.1), transparent 70%);
+            border-radius: 0 0 0 100%;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .module-icon-lg {
+            font-size: 2.5rem;
+            color: #ececec;
+            transition: 0.3s;
+        }
+
+        .module-card:hover .module-icon-lg {
+            color: rgba(232, 96, 76, 0.2);
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .module-title h4 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .module-title p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* --- Section Titles --- */
+        .section-header {
+            grid-column: span 12;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3b3f5c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 992px) {
+            .chart-section {
+                grid-column: span 12;
+            }
+
+            .actions-section {
+                grid-column: span 12;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .actions-section {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        async function initAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                window.supabaseClient = supabase;
+                document.body.style.display = 'block';
+            }
+        }
+        initAuth();
+    </script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">...</div>
+                    </div>
+                    <div class="avatar">?</div>
+                    <button onclick="handleLogout()" class="btn btn-outline-danger btn-sm ms-3"
+                        style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+
+                <div class="dashboard-grid">
+
+                    <!-- Welcome Section -->
+                    <div class="welcome-section">
+                        <div class="welcome-text">
+                            <h1 id="welcome-msg">Good Morning!</h1>
+                            <p>Here's what's happening with your platform today.</p>
+                        </div>
+                        <div class="date-badge">
+                            <span class="time" id="clock-time">00:00</span>
+                            <span class="date" id="clock-date">Mon, Jan 1</span>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="kpi-wrapper">
+                        <div class="kpi-card" onclick="window.location.href='sales.html'">
+                            <div class="kpi-icon" style="background: rgba(232, 96, 76, 0.1); color: #e8604c;">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 id="stat-total-sales">0</h3>
+                                <p>Total Bookings</p>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card" onclick="window.location.href='sales.html'">
+                            <div class="kpi-icon" style="background: rgba(46, 204, 113, 0.1); color: #27ae60;">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 id="stat-revenue">₹0</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card" onclick="window.location.href='sales.html'">
+                            <div class="kpi-icon" style="background: rgba(241, 196, 15, 0.1); color: #f39c12;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 id="stat-pending">₹0</h3>
+                                <p>Pending Balance</p>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card" onclick="window.location.href='sales.html'">
+                            <div class="kpi-icon" style="background: rgba(52, 152, 219, 0.1); color: #3498db;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 id="stat-margin">₹0</h3>
+                                <p>Net Margin</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="chart-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 style="margin:0; font-weight:700;">Revenue Analytics</h5>
+                            <select id="chart-filter" class="form-select form-select-sm" style="width: auto;">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                            </select>
+                        </div>
+                        <div style="flex-grow: 1; position: relative;">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Section -->
+                    <div class="actions-section">
+                        <a href="bookings.html" class="action-card">
+                            <div class="action-left">
+                                <div class="action-icon"><i class="fas fa-ticket-alt"></i></div>
+                                <div class="action-info">
+                                    <h5>Manage Bookings</h5>
+                                    <span>Launch Portals</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                        </a>
+
+                        <a href="email-config.html" class="action-card">
+                            <div class="action-left">
+                                <div class="action-icon"><i class="fas fa-envelope-cog"></i></div>
+                                <div class="action-info">
+                                    <h5>Email Config</h5>
+                                    <span>SMTP Settings</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                        </a>
+
+                        <a href="manage-booking-site.html" class="action-card">
+                            <div class="action-left">
+                                <div class="action-icon"><i class="fas fa-desktop"></i></div>
+                                <div class="action-info">
+                                    <h5>Portals Registry</h5>
+                                    <span>Manage Links</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                        </a>
+
+                        <a href="manage-images.html" class="action-card">
+                            <div class="action-left">
+                                <div class="action-icon"><i class="fas fa-images"></i></div>
+                                <div class="action-info">
+                                    <h5>Image Assets</h5>
+                                    <span>Upload & Manage</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                        </a>
+                    </div>
+
+
+                    <!-- Administration & Modules -->
+                    <div class="section-header">
+                        <div class="section-title">Administration & Modules</div>
+                    </div>
+
+                    <div class="modules-grid">
+                        <a href="manage-fleet.html" class="module-card">
+                            <div class="module-header">
+                                <div class="module-title">
+                                    <h4>Vehicle Fleet</h4>
+                                    <p>Manage Taxis & Inventory</p>
+                                </div>
+                                <i class="fas fa-taxi module-icon-lg"></i>
+                            </div>
+                            <div class="d-flex align-items-center text-primary fw-bold" style="font-size: 0.9rem;">
+                                <span>Manage Fleet</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </div>
+                        </a>
+
+                        <a href="manage-destinations.html" class="module-card">
+                            <div class="module-header">
+                                <div class="module-title">
+                                    <h4>Destinations</h4>
+                                    <p>tourist spots & packages</p>
+                                </div>
+                                <i class="fas fa-map-marked-alt module-icon-lg"></i>
+                            </div>
+                            <div class="d-flex align-items-center text-primary fw-bold" style="font-size: 0.9rem;">
+                                <span>Manage Destinations</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </div>
+                        </a>
+
+                        <a href="public-announcements.html" class="module-card">
+                            <div class="module-header">
+                                <div class="module-title">
+                                    <h4>Public Updates</h4>
+                                    <p>Website Announcements</p>
+                                </div>
+                                <i class="fas fa-bullhorn module-icon-lg"></i>
+                            </div>
+                            <div class="d-flex align-items-center text-primary fw-bold" style="font-size: 0.9rem;">
+                                <span>Manage Updates</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </div>
+                        </a>
+
+                        <a href="announcements.html" class="module-card">
+                            <div class="module-header">
+                                <div class="module-title">
+                                    <h4>Staff Noticeboard</h4>
+                                    <p>Internal Team Messages</p>
+                                </div>
+                                <i class="fas fa-chalkboard-teacher module-icon-lg"></i>
+                            </div>
+                            <div class="d-flex align-items-center text-primary fw-bold" style="font-size: 0.9rem;">
+                                <span>Post Notice</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </div>
+                        </a>
+
+                        <a href="hr.html" class="module-card" id="card-hr" style="display: none;">
+                            <div class="module-header">
+                                <div class="module-title">
+                                    <h4>Human Resources</h4>
+                                    <p>Staff & Permissions</p>
+                                </div>
+                                <i class="fas fa-users-cog module-icon-lg"></i>
+                            </div>
+                            <div class="d-flex align-items-center text-primary fw-bold" style="font-size: 0.9rem;">
+                                <span>Manage Access</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/admin-sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/admin-announcement-checker.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        let revenueChartInstance = null;
+        let salesData = [];
+
+        // Clock Function
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-time').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('clock-date').textContent = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+
+            const hours = now.getHours();
+            let greeting = 'Good Morning!';
+            if (hours >= 12 && hours < 17) greeting = 'Good Afternoon!';
+            else if (hours >= 17) greeting = 'Good Evening!';
+
+            // Only update if placeholder
+            const msgEl = document.getElementById('welcome-msg');
+            if (msgEl.textContent.trim() === 'Good Morning!' || msgEl.textContent.includes('Good')) {
+                // We will append Name later, so just keep greeting base for now or let loadDashboardData handle it
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function loadDashboardData() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            // Load Sales Data
+            const { data: sales, error } = await supabase
+                .from('sales')
+                .select('final_price, balance_to_receive, margin, sale_date')
+                .eq('user_id', user.id)
+                .order('sale_date', { ascending: true }); // Ascending for chart
+
+            // --- User Info ---
+            const REGISTRY_KEY = 'admin_users_registry';
+            const { data: registryData } = await supabase.from('site_content').select('value').eq('key', REGISTRY_KEY).single();
+            let registry = [];
+            try { registry = registryData ? JSON.parse(registryData.value) : []; } catch (e) { }
+
+            const userEntry = registry.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+            const role = userEntry?.role || user.user_metadata?.role || (registry.length === 0 ? 'super_admin' : 'admin');
+            const name = userEntry?.name || user.user_metadata?.full_name || user.email.split('@')[0];
+
+            // Update DOM
+            document.querySelector('.user-name').textContent = name;
+            document.querySelector('.user-role').textContent = role.replace('_', ' ');
+            document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+
+            // Personalize Greeting
+            const now = new Date();
+            const hours = now.getHours();
+            let greeting = hours < 12 ? 'Good Morning' : (hours < 17 ? 'Good Afternoon' : 'Good Evening');
+            document.getElementById('welcome-msg').textContent = `${greeting}, ${name.split(' ')[0]}!`;
+
+            // Super Admin check
+            if (role === 'super_admin') {
+                document.getElementById('card-hr').style.display = 'block';
+            }
+
+            // --- KPIS ---
+            if (sales && sales.length > 0) {
+                salesData = sales;
+
+                const totalBookings = sales.length;
+                const totalRevenue = sales.reduce((acc, sale) => acc + (parseFloat(sale.final_price) || 0), 0);
+                const totalPending = sales.reduce((acc, sale) => acc + (parseFloat(sale.balance_to_receive) || 0), 0);
+                const totalMargin = sales.reduce((acc, sale) => acc + (parseFloat(sale.margin) || 0), 0);
+
+                document.getElementById('stat-total-sales').textContent = totalBookings;
+                document.getElementById('stat-revenue').textContent = '₹' + Math.round(totalRevenue).toLocaleString();
+                document.getElementById('stat-pending').textContent = '₹' + Math.round(totalPending).toLocaleString();
+                document.getElementById('stat-margin').textContent = '₹' + Math.round(totalMargin).toLocaleString();
+
+                // Init Chart
+                initChart(30);
+            }
+        }
+
+        function initChart(days) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            // Process Data: Group by Date
+            const dateMap = {};
+            const today = new Date();
+
+            // Create placeholders for last N days
+            for (let i = days - 1; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                dateMap[dateStr] = 0;
+            }
+
+            // Fill with entries
+            salesData.forEach(sale => {
+                if (sale.sale_date && dateMap.hasOwnProperty(sale.sale_date)) {
+                    dateMap[sale.sale_date] += (parseFloat(sale.final_price) || 0);
+                }
+            });
+
+            const labels = Object.keys(dateMap).map(d => {
+                const date = new Date(d);
+                return `${date.getDate()}/${date.getMonth() + 1}`;
+            });
+            const dataValues = Object.values(dateMap);
+
+            if (revenueChartInstance) {
+                revenueChartInstance.destroy();
+            }
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(232, 96, 76, 0.5)');
+            gradient.addColorStop(1, 'rgba(232, 96, 76, 0.0)');
+
+            revenueChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue (₹)',
+                        data: dataValues,
+                        borderColor: '#e8604c',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#e8604c',
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#333',
+                            bodyColor: '#333',
+                            borderColor: '#e0e0e0',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    return 'Revenue: ₹' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                borderDash: [5, 5],
+                                color: '#f0f0f0'
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return '₹' + (value / 1000) + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart Filter Change
+        document.getElementById('chart-filter').addEventListener('change', (e) => {
+            initChart(parseInt(e.target.value));
+        });
+
+        loadDashboardData();
+    </script>
+
+</body>
+
+</html>

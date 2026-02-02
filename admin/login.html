@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Login - Fly Light Tours</title>
+    <link rel="stylesheet" href="../assets/vendors/fontawesome/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+    <link rel="icon" href="../assets/images/favicons/fev.admin.png" type="image/png">
+
+    <style>
+        /* CSS Variables - Minimal & Semantic */
+        :root {
+            --primary-color: #123821;
+            /* Brand Dark Green */
+            --accent-color: #06d1fa;
+            /* Brand Blue */
+            --bg-color: #f4f7fa;
+            /* Light Neutral Background */
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --input-bg: #f9fafb;
+            --focus-ring: rgba(6, 209, 250, 0.25);
+            --danger: #dc2626;
+            --success: #16a34a;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --font-family: 'DM Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 420px;
+            padding: 48px 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Input styling */
+        .form-control {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            /* Left padding for icon */
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-main);
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease-in-out;
+            font-family: var(--font-family);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background-color: #fff;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Icons */
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .form-control:focus+.input-icon,
+        .form-control:focus~.input-icon {
+            color: var(--accent-color);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-main);
+        }
+
+        /* Actions (Forgot Password) */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -10px;
+            margin-bottom: 24px;
+        }
+
+        .link-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .link-text:hover {
+            color: var(--primary-color);
+        }
+
+        /* Button */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: #0e2d1b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(18, 56, 33, 0.2);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Status Messages */
+        .status-msg {
+            margin-top: 16px;
+            font-size: 14px;
+            text-align: center;
+            min-height: 20px;
+            border-radius: 6px;
+            padding: 8px;
+            display: none;
+        }
+
+        .status-msg.visible {
+            display: block;
+        }
+
+        .success {
+            background-color: #dcfce7;
+            color: var(--success);
+            border: 1px solid #bbf7d0;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+        }
+
+        /* Helpers */
+        .w-100 {
+            width: 100%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 16px;
+        }
+
+        .mb-3 {
+            margin-bottom: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <header class="login-header">
+            <h1>Admin Login</h1>
+            <p>Welcome back. Please sign in to continue.</p>
+        </header>
+
+        <!-- Login Form -->
+        <form id="loginForm" novalidate>
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" class="form-control" placeholder="name@company.com" required
+                        aria-label="Email Address">
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required
+                        aria-label="Password">
+                    <i class="fas fa-lock input-icon"></i>
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="#" id="forgotPasswordLink" class="link-text">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary" id="signInBtn">
+                <span class="btn-text">Sign In</span>
+            </button>
+            <div id="statusMsg" class="status-msg"></div>
+        </form>
+
+        <!-- Forgot Password Form (Hidden) -->
+        <form id="resetForm" style="display: none;" novalidate>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+                Enter your email address and we will send you a link to reset your password.
+            </p>
+            <div class="form-group">
+                <label for="resetEmail" class="form-label">Email Address</label>
+                <div class="input-wrapper">
+                    <input type="email" id="resetEmail" class="form-control" placeholder="name@company.com" required
+                        aria-label="Email Address">
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="resetBtn">Send Reset Link</button>
+
+            <div class="text-center mt-4">
+                <a href="#" id="backToLogin" class="link-text">Back to Login</a>
+            </div>
+            <div id="resetStatusMsg" class="status-msg"></div>
+        </form>
+    </div>
+
+    <!-- Logic -->
+    <script type="module">
+        import { supabase } from '../assets/js/supabase-client.js';
+
+        // Elements
+        const loginForm = document.getElementById('loginForm');
+        const resetForm = document.getElementById('resetForm');
+        const statusMsg = document.getElementById('statusMsg');
+        const resetStatusMsg = document.getElementById('resetStatusMsg');
+        const forgotLink = document.getElementById('forgotPasswordLink');
+        const backLink = document.getElementById('backToLogin');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const signInBtn = document.getElementById('signInBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Helpers
+        function showStatus(element, message, type) {
+            element.textContent = message;
+            element.className = `status-msg visible ${type}`;
+        }
+        function clearStatus(element) {
+            element.className = 'status-msg';
+            element.textContent = '';
+        }
+
+        // 1. Auth Check
+        async function checkSession() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    window.location.replace('dashboard.html');
+                }
+            } catch (err) {
+                console.warn('Auth check failed', err);
+            }
+        }
+        checkSession();
+
+        // 2. Password Toggle
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            const icon = togglePasswordBtn.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // 3. Form Switching
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearStatus(statusMsg);
+            loginForm.style.display = 'none';
+            resetForm.style.display = 'block';
+            document.querySelector('.login-header h1').textContent = 'Reset Password';
+            document.querySelector('.login-header p').textContent = '';
+        });
+
+        backLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearStatus(resetStatusMsg);
+            resetForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            document.querySelector('.login-header h1').textContent = 'Admin Login';
+            document.querySelector('.login-header p').textContent = 'Welcome back. Please sign in to continue.';
+        });
+
+        // 4. Login Logic
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                showStatus(statusMsg, 'Please fill in all fields.', 'error');
+                return;
+            }
+
+            signInBtn.disabled = true;
+            signInBtn.innerHTML = 'Signing in...';
+            clearStatus(statusMsg);
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                showStatus(statusMsg, error.message, 'error');
+                signInBtn.disabled = false;
+                signInBtn.innerHTML = 'Sign In';
+            } else {
+                showStatus(statusMsg, 'Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 800);
+            }
+        });
+
+        // 5. Reset Logic
+        resetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value.trim();
+
+            if (!email) {
+                showStatus(resetStatusMsg, 'Please enter your email.', 'error');
+                return;
+            }
+
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = 'Sending...';
+            clearStatus(resetStatusMsg);
+
+            // Using dashboard.html as redirect target to avoid 404
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/admin/dashboard.html',
+            });
+
+            if (error) {
+                showStatus(resetStatusMsg, error.message, 'error');
+            } else {
+                showStatus(resetStatusMsg, 'Reset link sent! Check your inbox.', 'success');
+            }
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = 'Send Reset Link';
+        });
+    </script>
+</body>
+
+</html>
